@@ -8,6 +8,7 @@ public class Main {
         System.out.print("How many players: ");
         int numPlayers = in.nextInt();
 
-        int n = 0;
+        Game game = new Game(numPlayers);
+        game.play();
     }
 }
