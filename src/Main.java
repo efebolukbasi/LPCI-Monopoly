@@ -8,11 +8,7 @@ public class Main {
         System.out.print("How many players: ");
         int numPlayers = in.nextInt();
 
-        Game game = new Game(numPlayers);
-        game.play();
 
-
-        System.out.print("Hello world");
 
     }
 }
