@@ -10,5 +10,9 @@ public class Main {
 
         Game game = new Game(numPlayers);
         game.play();
+
+
+        System.out.print("Hello world");
+
     }
 }
