@@ -4,26 +4,43 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        boolean gameMode = true; // Main Game While Loop Condition
 
 
 
-
-while (gameMode){
+while (true){
     blz_intro();
-    System.out.print("Game Cycle Over"); // for testing
 
+
+    // exit while loop
+    blz_exit();
+
+   }
 
 }
 
-    }
 
+//                                      --------------- functions----------------
+
+    public static void blz_exit(){
+        Scanner in = new Scanner(System.in);
+        String exit;
+        do {
+            System.out.print("Play Again (y/n): ");
+            exit = in.next().toLowerCase();
+        }while (!exit.equals("n") && !exit.equals("y"));
+        if(exit.equals("n")) {
+            System.out.println("Game Over");
+            System.exit(0);
+
+
+        }
+    }
 
     public static void blz_intro(){
         Scanner in = new Scanner(System.in);
         int numPlayers;
         do {
-            System.out.print("How many players: ");
+            System.out.print("\n\nHow many players: ");
             numPlayers = in.nextInt();
 
         }while(numPlayers <=1 || numPlayers >= 5);
