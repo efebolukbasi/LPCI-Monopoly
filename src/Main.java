@@ -3,6 +3,8 @@ import java.util.Scanner;
 
 
 public class Main {
+    public static boolean user1Turn = true;
+
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
          final int G_COINS =8; // each player has 8 coins
