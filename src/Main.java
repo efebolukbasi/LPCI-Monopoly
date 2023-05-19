@@ -6,22 +6,35 @@ public class Main {
         Scanner in = new Scanner(System.in);
         boolean gameMode = true; // Main Game While Loop Condition
 
-        System.out.print("How many players: ");
-        int numPlayers = in.nextInt();
 
-        System.out.print("Select Game Length:\n1.Short\n2.Medium\n3.Long\nEnter: ");
-        int gameLength = in.nextInt();
-        while(gameLength <=0 || gameLength >=4){
-            System.out.print("Select Game Length:\n1.Short\n2.Medium\n3.Long\nEnter: ");
-            gameLength = in.nextInt();
-        }
 
 
 while (gameMode){
-
+    blz_intro();
+    System.out.print("Game Cycle Over"); // for testing
 
 
 }
 
     }
+
+
+    public static void blz_intro(){
+        Scanner in = new Scanner(System.in);
+        int numPlayers;
+        do {
+            System.out.print("How many players: ");
+            numPlayers = in.nextInt();
+
+        }while(numPlayers <=1 || numPlayers >= 5);
+        int gameLength;
+
+        do {
+            System.out.print("Select Game Length:\n1.Short\n2.Medium\n3.Long\nEnter: ");
+            gameLength = in.nextInt();
+        }while(gameLength <=0 || gameLength >=4);
+
+
+    }
+
 }
