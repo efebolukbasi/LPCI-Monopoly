@@ -27,11 +27,8 @@ public class Main {
         }
 
         // Number of Players Loop (Makes sure it is between 2-4)
-        int numPlayers;
-        do{
-            System.out.print("Enter number of players (Between 2-4): ");
-            numPlayers = in.nextInt();
-        } while (numPlayers > 4 || numPlayers < 2);
+
+        Functions.blz_intro(); // intro function
 
         // Swing GUI
         // Create the main frame
@@ -109,6 +106,9 @@ public class Main {
         // Set the frame size and visibility
         frame.setSize(1500, 250);
         frame.setVisible(true);
+
+
+        Functions.blz_exit();
     }
 
 }
