@@ -10,25 +10,33 @@ import java.awt.event.KeyEvent;
 
 
 public class Main {
-    private static final int TILE_COUNT = 30;
-    private static final int WINNING_TILE = TILE_COUNT / 2;
+    //private static final int TILE_COUNT = 30;
+
     public static boolean user1Turn = true;
     private static JButton rollButton;
     public static JLabel turnLabel;
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         Random rand = new Random();
+// constants
+        final int blz_Short = 16;
+        final int blz_Med = 30;
+        final int blz_Long = 40;
+
+
+        int gameLength =  Functions.blz_intro(); // intro function
+
+        final int WINNING_TILE = gameLength  / 2; // set winning tile in the middle of the board
+
 
         // Board Tiles Values
-        int[] boardTileValues = new int[30];
+        int[] boardTileValues = new int[gameLength];
         for (int i = 0; i < boardTileValues.length; i++) {
-            int randomValue = rand.nextInt(-1, 2) ;
+            int randomValue = rand.nextInt(-1, 2) ;// random point values for tiles
             boardTileValues[i] = randomValue;
         }
 
         // Number of Players Loop (Makes sure it is between 2-4)
-
-        Functions.blz_intro(); // intro function
 
         // Swing GUI
         // Create the main frame
@@ -37,9 +45,9 @@ public class Main {
         frame.setLayout(new FlowLayout());
 
         // Create the tile panel
-        JButton[] tiles = new JButton[TILE_COUNT];
+        JButton[] tiles = new JButton[gameLength];
         JPanel tilePanel = new JPanel(new FlowLayout());
-        for (int i = 0; i < TILE_COUNT; i++) {
+        for (int i = 0; i < gameLength; i++) {
             tiles[i] = new JButton(String.valueOf(boardTileValues[i]));
             tiles[i].setBackground(Color.WHITE);
             tiles[i].setEnabled(false);
@@ -50,6 +58,7 @@ public class Main {
         rollButton = new JButton("Pick Card");
         rollButton.addActionListener(e -> {
             String message;
+            
 
             if (user1Turn) {
                 message = "User 1 drew a " +  (Arrays.toString(Functions.generateRandomDeck(1))); // Generate a random card for user1 when pressed button
@@ -63,7 +72,7 @@ public class Main {
                 rollButton.setEnabled(true);
             }
 
-            JOptionPane.showMessageDialog(frame, message);
+            JOptionPane.showMessageDialog(frame, message);// output button click message
         });
 
         // Create the turn label

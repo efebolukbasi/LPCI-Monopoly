@@ -4,13 +4,15 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Functions {
+
     public static void main(String[] args) {
+
 
     }
     public static String[] generateRandomDeck(int numCards) {
         String[] deck = new String[numCards];
         String[] suits = {"Spades", "Hearts", "Diamonds", "Clubs"};
-        String[] ranks = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
+        String[] ranks = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King","Ace"};
 
         Random rand = new Random();
 
@@ -45,7 +47,10 @@ public class Functions {
         }
     }
 
-    public static void blz_intro(){
+    public static int blz_intro(){
+        final int blz_Short = 16;
+        final int blz_Med = 30;
+        final int blz_Long = 40;
         Scanner in = new Scanner(System.in);
         int numPlayers;
         do {
@@ -67,9 +72,18 @@ public class Functions {
             gameLength = in.nextInt();
         }while(gameLength <=0 || gameLength >=4);
 
+        if(gameLength == 1){
+            gameLength = blz_Short;
+
+        } else if (gameLength==2) {
+            gameLength = blz_Med;
+
+        }else{
+            gameLength = blz_Long;
+        }
 
 
-
+return gameLength;
 
     }
 
