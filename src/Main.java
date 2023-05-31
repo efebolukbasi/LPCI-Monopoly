@@ -115,6 +115,17 @@ public class Main {
 
 
 
+        // Create a custom JPanel to display the player icon
+        JPanel player1Panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                drawPlayer1Icon(g);
+            }
+        };
+
+        // Add the player panel to the frame
+        frame.getContentPane().add(player1Panel);
 
         // Display the frame
         frame.setVisible(true);
@@ -128,7 +139,18 @@ public class Main {
         Functions.blz_exit();// play again or leave
     }
 
+    private static void drawPlayer1Icon(Graphics g) {
+        // Set the color and size for the player icon
+        g.setColor(Color.BLUE);
+        int iconSize = 100;
 
+        // Calculate the position for the player icon
+        int p1_x = (300 - iconSize) / 2;
+        int p1_y = (300 - iconSize) / 2;
+
+        // Draw the player icon as a circle
+        g.fillOval(p1_x, p1_y, iconSize, iconSize);
+    }
 
 
 
