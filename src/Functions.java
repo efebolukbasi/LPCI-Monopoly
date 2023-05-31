@@ -12,7 +12,7 @@ public class Functions {
     public static String[] generateRandomDeck(int numCards) {
         String[] deck = new String[numCards];
         String[] suits = {"Spades", "Hearts", "Diamonds", "Clubs"};
-        String[] ranks = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King","Ace"};
+         String[] ranks = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King","Ace"};
 
         Random rand = new Random();
 
@@ -47,7 +47,7 @@ public class Functions {
         }
     }
 
-    public static int blz_intro(){
+    public static int blz_intro(){// before the game starts (user enters their game parameters)
         final int blz_Short = 16;
         final int blz_Med = 30;
         final int blz_Long = 40;

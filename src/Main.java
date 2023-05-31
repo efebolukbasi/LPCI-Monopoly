@@ -1,12 +1,12 @@
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Random;
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 
 
 public class Main {
@@ -42,6 +42,7 @@ public class Main {
         // Create the main frame
         JFrame frame = new JFrame("Blitz Krieg");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         frame.setLayout(new FlowLayout());
 
         // Create the tile panel
@@ -49,7 +50,7 @@ public class Main {
         JPanel tilePanel = new JPanel(new FlowLayout());
         for (int i = 0; i < gameLength; i++) {
             tiles[i] = new JButton(String.valueOf(boardTileValues[i]));
-            tiles[i].setBackground(Color.WHITE);
+            tiles[i].setBackground(Color.WHITE); // change color of Game tiles
             tiles[i].setEnabled(false);
             tilePanel.add(tiles[i]);
         }
@@ -70,6 +71,7 @@ public class Main {
                 user1Turn = true;
                 Functions.updateTurnLabel(turnLabel);
                 rollButton.setEnabled(true);
+
             }
 
             JOptionPane.showMessageDialog(frame, message);// output button click message
@@ -78,7 +80,7 @@ public class Main {
         // Create the turn label
         turnLabel = new JLabel("Turn: User 1");
 
-        // Bind "W" key to roll dice for User 1
+        // Bind "W" key to pick up card for User 1
         rollButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "PickUser1");
         rollButton.getActionMap().put("PickUser1", new AbstractAction() {
             @Override
@@ -89,8 +91,7 @@ public class Main {
                 }
             }
         });
-
-        // Bind "Y" key to roll dice for User 2
+                                                                                                                    // Bind "Y" key to roll dice for User 2
         rollButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, 0), "PickUser2");
         rollButton.getActionMap().put("PickUser2", new AbstractAction() {
             @Override
@@ -110,14 +111,27 @@ public class Main {
         // Set the winning tile in the middle
         JButton winningTile = tiles[WINNING_TILE];
         winningTile.setText("WINNER");
-        winningTile.setBackground(Color.YELLOW);
 
-        // Set the frame size and visibility
-        frame.setSize(1500, 250);
+
+
+
+
+        // Display the frame
         frame.setVisible(true);
 
 
-        Functions.blz_exit();
+
+        // Set the frame size and visibility
+        frame.setSize(1500, 450);
+        frame.setVisible(true);
+
+        Functions.blz_exit();// play again or leave
     }
 
+
+
+
+
 }
+
+
