@@ -47,26 +47,30 @@ public class Functions {
         }
     }
 
-    public static int blz_intro(){// before the game starts (user enters their game parameters)
-        final int blz_Short = 16;
-        final int blz_Med = 30;
-        final int blz_Long = 40;
+    public static int[] blz_intro() {// before the game starts (user enters their game parameters)
+
         Scanner in = new Scanner(System.in);
-        int numPlayers;
+        int[] numPlayers;
         do {
-            System.out.print("\n\nHow many players: ");
-            numPlayers = in.nextInt();
+            System.out.print("\n\nHow many players: ");// an array of how many players we have
+            numPlayers = new int[in.nextInt()];
 
-        }while(numPlayers <=1 || numPlayers >= 5);
-        int gameLength;
+        } while (numPlayers.length <= 1 || numPlayers.length >= 5);
 
-        int[] blz_PlayerCoins = new int[numPlayers]; // an array that stores the amount of coins users have
+
+        int[] blz_PlayerCoins = new int[numPlayers.length]; // an array that stores the amount of coins users have
 
         // giving each player 8 coins to start
         Arrays.fill(blz_PlayerCoins, 8);
         // System.out.print(Arrays.toString(blz_PlayerCoins));
-
-
+        return numPlayers;
+    }
+    public static int blz_getGameLength(){
+        Scanner in = new Scanner(System.in);
+        final int blz_Short = 16;
+        final int blz_Med = 30;
+        final int blz_Long = 40;
+        int gameLength;
         do {
             System.out.print("Select Game Length:\n1.Short\n2.Medium\n3.Long\nEnter: ");// come back to this feature
             gameLength = in.nextInt();
@@ -84,6 +88,7 @@ public class Functions {
 
 
         return gameLength;
+
 
     }
 

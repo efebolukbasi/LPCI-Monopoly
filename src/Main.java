@@ -24,7 +24,9 @@ public class Main {
         final int blz_Long = 40;
 
 
-        int gameLength =  Functions.blz_intro(); // intro function
+        int[] numplayers =  (Functions.blz_intro()); // intro function
+        int gameLength = Functions.blz_getGameLength();// get game length
+
 
         final int WINNING_TILE = gameLength  / 2; // set winning tile in the middle of the board
 
@@ -80,18 +82,23 @@ public class Main {
         // Create the turn label
         turnLabel = new JLabel("Turn: User 1");
 
-        // Bind "W" key to pick up card for User 1
-        rollButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "PickUser1");
-        rollButton.getActionMap().put("PickUser1", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (user1Turn) {
-                    rollButton.setEnabled(true);
-                    rollButton.doClick();
-                }
+
+        for(int i =0;i<numplayers.length;i++){
+    if(i ==0){
+    // Bind "W" key to pick up card for User 1
+    rollButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "PickUser1");
+    rollButton.getActionMap().put("PickUser1", new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (user1Turn) {
+                rollButton.setEnabled(true);
+                rollButton.doClick();
             }
-        });
-                                                                                                                    // Bind "Y" key to roll dice for User 2
+        }
+    });
+}
+
+    if(i==1){
         rollButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, 0), "PickUser2");
         rollButton.getActionMap().put("PickUser2", new AbstractAction() {
             @Override
@@ -102,6 +109,14 @@ public class Main {
                 }
             }
         });
+
+    // add for more players
+    }
+        }
+
+
+                                                                                                                    // Bind "Y" key to roll dice for User 2
+
 
         // Add the components to the frame
         frame.add(tilePanel);
