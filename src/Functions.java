@@ -52,10 +52,10 @@ public class Functions {
         Scanner in = new Scanner(System.in);
         int[] numPlayers;
         do {
-            System.out.print("\n\nHow many players: ");// an array of how many players we have
+            System.out.print("\n\nHow many players(2,4): ");// an array of how many players we have
             numPlayers = new int[in.nextInt()];
 
-        } while (numPlayers.length <= 1 || numPlayers.length >= 5);
+        } while (numPlayers.length ==3 || (numPlayers.length <= 1 || numPlayers.length >= 5)); // only even numbers
 
 
         int[] blz_PlayerCoins = new int[numPlayers.length]; // an array that stores the amount of coins users have
