@@ -24,11 +24,15 @@ public class Functions {
 
         return deck;
     }
-    public static void updateTurnLabel(JLabel label) {
-        if (Main.user1Turn) {
+    public static void updateTurnLabel(JLabel label, int turn) {
+        if (turn == 1) {
             label.setText("Turn: User 1");
-        } else {
+        }else if(turn ==2) {
             label.setText("Turn: User 2");
+        } else if (Main.extraPlayers && turn==3) {
+            label.setText("Turn: User 3");
+        } else if (Main.extraPlayers && turn ==4) {
+            label.setText("Turn: User 4");
         }
     }
 
@@ -57,6 +61,7 @@ public class Functions {
 
         } while (numPlayers.length ==3 || (numPlayers.length <= 1 || numPlayers.length >= 5)); // only even numbers
 
+        if(numPlayers.length >3) Main.extraPlayers = true;
 
         int[] blz_PlayerCoins = new int[numPlayers.length]; // an array that stores the amount of coins users have
 
@@ -65,6 +70,9 @@ public class Functions {
         // System.out.print(Arrays.toString(blz_PlayerCoins));
         return numPlayers;
     }
+
+
+    /*
     public static int blz_getGameLength(){
         Scanner in = new Scanner(System.in);
         final int blz_Short = 16;
@@ -91,5 +99,7 @@ public class Functions {
 
 
     }
+
+     */
 
 }

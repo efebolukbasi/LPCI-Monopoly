@@ -10,29 +10,29 @@ import javax.swing.JFrame;
 
 
 public class Main {
-    //private static final int TILE_COUNT = 30;
+    private static final int TILE_COUNT = 30;
 
-    public static boolean user1Turn = true;
+    public static int userTurn = 1;
     private static JButton rollButton;
     public static JLabel turnLabel;
+
+    public static boolean extraPlayers = false;
+
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         Random rand = new Random();
-// constants
-        final int blz_Short = 16;
-        final int blz_Med = 30;
-        final int blz_Long = 40;
+
 
 
         int[] numplayers =  (Functions.blz_intro()); // intro function
-        int gameLength = Functions.blz_getGameLength();// get game length
+       // int gameLength = Functions.blz_getGameLength();// get game length
 
 
-        final int WINNING_TILE = gameLength  / 2; // set winning tile in the middle of the board
+        final int WINNING_TILE = TILE_COUNT  / 2; // set winning tile in the middle of the board
 
 
         // Board Tiles Values
-        int[] boardTileValues = new int[gameLength];
+        int[] boardTileValues = new int[TILE_COUNT ];
         for (int i = 0; i < boardTileValues.length; i++) {
             int randomValue = rand.nextInt(-1, 2) ;// random point values for tiles
             boardTileValues[i] = randomValue;
@@ -48,80 +48,84 @@ public class Main {
         frame.setLayout(new FlowLayout());
 
         // Create the tile panel
-        JButton[] tiles = new JButton[gameLength];
+        JButton[] tiles = new JButton[TILE_COUNT ];
         JPanel tilePanel = new JPanel(new FlowLayout());
-        for (int i = 0; i < gameLength; i++) {
+        for (int i = 0; i < TILE_COUNT ; i++) {
             tiles[i] = new JButton(String.valueOf(boardTileValues[i]));
             tiles[i].setBackground(Color.WHITE); // change color of Game tiles
             tiles[i].setEnabled(false);
             tilePanel.add(tiles[i]);
         }
-        int i=0;
-        while(i!=5){
-            if(i==0){
-                // Create the pick a card button
-                rollButton = new JButton("Pick Card");
-                rollButton.addActionListener(e -> {
-                    String message = "";
+
+        // Create the turn label
+        turnLabel = new JLabel("Turn: User 1");
 
 
-                    message = "User 1 drew a " + (Arrays.toString(Functions.generateRandomDeck(1))); // Generate a random card for user1 when pressed button
-
-                    Functions.updateTurnLabel(turnLabel);
-                    rollButton.setEnabled(true);
-
-
-                    JOptionPane.showMessageDialog(frame, message);// output button click message
-                });
-i++;
-            } else if (i==1) {
-                rollButton = new JButton("Pick Card");
-                rollButton.addActionListener(e -> {
-                    String message = "";
+    if (userTurn == 1) {
+        // Create the pick a card button
+        rollButton = new JButton("Pick Card");
+        rollButton.addActionListener(e -> {
+            String message = "";
 
 
-                    message = "User 2 drew a " + (Arrays.toString(Functions.generateRandomDeck(1))); // Generate a random card for user1 when pressed button
-
-                    Functions.updateTurnLabel(turnLabel);
-                    rollButton.setEnabled(true);
-
-
-                    JOptionPane.showMessageDialog(frame, message);// output button click message
-                });
-                i++;
-            } else if (numplayers.length>3 && i==2) {
-                rollButton = new JButton("Pick Card");
-                rollButton.addActionListener(e -> {
-                    String message = "";
+            message = "User 1 drew a " + (Arrays.toString(Functions.generateRandomDeck(1))); // Generate a random card for user1 when pressed button
+            userTurn++;
+            Functions.updateTurnLabel(turnLabel, userTurn);
+            rollButton.setEnabled(true);
 
 
-                    message = "User 3 drew a " + (Arrays.toString(Functions.generateRandomDeck(1))); // Generate a random card for user1 when pressed button
+            JOptionPane.showMessageDialog(frame, message);// output button click message
+        });
 
-                    Functions.updateTurnLabel(turnLabel);
-                    rollButton.setEnabled(true);
-
-
-                    JOptionPane.showMessageDialog(frame, message);// output button click message
-                });
-                i++;
-            } else if (numplayers.length>3 &&i==3) {
-                rollButton = new JButton("Pick Card");
-                rollButton.addActionListener(e -> {
-                    String message = "";
+    } else if (userTurn == 2) {
+        rollButton = new JButton("Pick Card");
+        rollButton.addActionListener(e -> {
+            String message = "";
 
 
-                    message = "User 4 drew a " + (Arrays.toString(Functions.generateRandomDeck(1))); // Generate a random card for user1 when pressed button
+            message = "User 2 drew a " + (Arrays.toString(Functions.generateRandomDeck(1))); // Generate a random card for user1 when pressed button
 
-                    Functions.updateTurnLabel(turnLabel);
-                    rollButton.setEnabled(true);
+            Functions.updateTurnLabel(turnLabel, userTurn);
+            rollButton.setEnabled(true);
+            userTurn++;
+
+            JOptionPane.showMessageDialog(frame, message);// output button click message
+            if (!extraPlayers) userTurn = 1; // if there are only 2 players then reset the player turn
+        });
 
 
-                    JOptionPane.showMessageDialog(frame, message);// output button click message
-                });
-                break;
-            }
-        }
-        i=0;
+    } else if (extraPlayers && userTurn == 3) {
+        rollButton = new JButton("Pick Card");
+        rollButton.addActionListener(e -> {
+            String message = "";
+
+
+            message = "User 3 drew a " + (Arrays.toString(Functions.generateRandomDeck(1))); // Generate a random card for user1 when pressed button
+
+            Functions.updateTurnLabel(turnLabel, userTurn);
+            rollButton.setEnabled(true);
+            userTurn++;
+
+            JOptionPane.showMessageDialog(frame, message);// output button click message
+        });
+
+    } else if (extraPlayers && userTurn == 4) {
+        rollButton = new JButton("Pick Card");
+        rollButton.addActionListener(e -> {
+            String message = "";
+
+
+            message = "User 4 drew a " + (Arrays.toString(Functions.generateRandomDeck(1))); // Generate a random card for user1 when pressed button
+
+            Functions.updateTurnLabel(turnLabel, userTurn);
+            rollButton.setEnabled(true);
+
+
+            JOptionPane.showMessageDialog(frame, message);// output button click message
+            userTurn = 1;
+        });
+
+
 
 
 /*
@@ -197,12 +201,11 @@ i++;
 
 
 
-        // Create the turn label
-        turnLabel = new JLabel("Turn: User 1");
 
+// keybinds for user turns
+/*
 
-        int j =0;
-    if(j ==0){
+    if(userTurn ==1){
     // Bind "W" key to pick up card for User 1
     rollButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "PickUser1");
     rollButton.getActionMap().put("PickUser1", new AbstractAction() {
@@ -211,13 +214,13 @@ i++;
 
                 rollButton.setEnabled(true);
                 rollButton.doClick();
-
+            userTurn++;
         }
     });
-    j++;
+
 }
 
-    if(j==1){
+    if(userTurn ==2){
         rollButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, 0), "PickUser2");
         rollButton.getActionMap().put("PickUser2", new AbstractAction() {
             @Override
@@ -225,16 +228,16 @@ i++;
 
                     rollButton.setEnabled(true);
                     rollButton.doClick();
-
+                userTurn++;
             }
         });
 
     // add for more players
-j++;
+
     }
 
 
-    if(numplayers.length>3 && j==2){ // player 3
+    if(extraPlayers && userTurn ==3){ // player 3
         rollButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, 0), "PickUser3");
         rollButton.getActionMap().put("PickUser3", new AbstractAction() {
             @Override
@@ -242,13 +245,13 @@ j++;
 
                 rollButton.setEnabled(true);
                 rollButton.doClick();
-
+                userTurn++;
             }
         });
-        j++;
+
     }
 
-    if(numplayers.length>3 && j ==3){// player 4
+    if(extraPlayers && userTurn ==4){// player 4
         rollButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, 0), "PickUser4");
         rollButton.getActionMap().put("PickUser4", new AbstractAction() {
             @Override
@@ -256,12 +259,15 @@ j++;
 
                 rollButton.setEnabled(true);
                 rollButton.doClick();
-
+                userTurn=1;
             }
+
         });
-        j=0;
+
     }
 
+
+ */
 
 
                                                                                                                     // Bind "Y" key to roll dice for User 2
@@ -300,7 +306,7 @@ j++;
         frame.setSize(1500, 450);
         frame.setVisible(true);
 
-        Functions.blz_exit();// play again or leave
+       // Functions.blz_exit();// play again or leave
     }
 
     private static void drawPlayer1Icon(Graphics g) {
