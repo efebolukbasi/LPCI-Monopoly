@@ -1,123 +1,67 @@
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.Random;
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
-
+import java.awt.*;
 
 public class Main {
-    //private static final int TILE_COUNT = 30;
+    private static final int TILE_COUNT = 32;
+    private static final int BOARD_SIZE = 1080; // Board size in pixels
+    private static final int OUTER_MARGIN = BOARD_SIZE / 20; // Outer margin size in pixels
+    private static final int INNER_MARGIN = BOARD_SIZE / 40; // Inner margin size in pixels
+    private static final Color[] TILE_COLORS = {Color.BLUE, Color.YELLOW}; // Tile colors (blue and gold)
 
-    public static boolean user1Turn = true;
-    private static JButton rollButton;
-    public static JLabel turnLabel;
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        Random rand = new Random();
-// constants
-        final int blz_Short = 16;
-        final int blz_Med = 30;
-        final int blz_Long = 40;
-
-
-        int gameLength =  Functions.blz_intro(); // intro function
-
-        final int WINNING_TILE = gameLength  / 2; // set winning tile in the middle of the board
-
-
-        // Board Tiles Values
-        int[] boardTileValues = new int[gameLength];
-        for (int i = 0; i < boardTileValues.length; i++) {
-            int randomValue = rand.nextInt(-1, 2) ;// random point values for tiles
-            boardTileValues[i] = randomValue;
-        }
-
-        // Number of Players Loop (Makes sure it is between 2-4)
-
-        // Swing GUI
         // Create the main frame
-        JFrame frame = new JFrame("Blitz Krieg");
+        JFrame frame = new JFrame("Monopoly Board");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new FlowLayout());
+        frame.setLayout(null); // Use absolute layout
 
         // Create the tile panel
-        JButton[] tiles = new JButton[gameLength];
-        JPanel tilePanel = new JPanel(new FlowLayout());
-        for (int i = 0; i < gameLength; i++) {
-            tiles[i] = new JButton(String.valueOf(boardTileValues[i]));
-            tiles[i].setBackground(Color.WHITE);
-            tiles[i].setEnabled(false);
-            tilePanel.add(tiles[i]);
+        JPanel tilePanel = new JPanel();
+        tilePanel.setLayout(null); // Use absolute layout
+        tilePanel.setBounds(0, 0, BOARD_SIZE, BOARD_SIZE);
+        frame.add(tilePanel);
+
+        // Create the tiles
+        JButton[] tiles = new JButton[TILE_COUNT];
+        int tileSize = (BOARD_SIZE - 2 * OUTER_MARGIN - 8 * INNER_MARGIN) / 9;
+        int row = 0;
+        int col = 0;
+        int colorIndex = 0; // Index for tile colors
+        int i = 0;
+        while (i < TILE_COUNT - 1) {
+            if (row == 0 || row == 8 || col == 0 || col == 8) {
+                tiles[i] = new JButton(String.valueOf(i + 1));
+                tiles[i].setBounds(OUTER_MARGIN + col * (tileSize + INNER_MARGIN),
+                        OUTER_MARGIN + row * (tileSize + INNER_MARGIN), tileSize, tileSize);
+                tiles[i].setHorizontalAlignment(SwingConstants.RIGHT); // Set number alignment to right
+                tiles[i].setVerticalAlignment(SwingConstants.TOP); // Set number alignment to top
+                tiles[i].setEnabled(false); // Disable the tile button
+                tiles[i].setBackground(TILE_COLORS[colorIndex]); // Set tile color
+                tilePanel.add(tiles[i]);
+                i++;
+            }
+            if (col < 8 && row == 0) {
+                col++;
+            } else if (row < 8 && col == 8) {
+                row++;
+            } else if (col > 0 && row == 8) {
+                col--;
+            } else if (col == 0 && row > 1) {
+                row--;
+            }
+            colorIndex = (colorIndex + 1) % TILE_COLORS.length; // Update tile color index
         }
 
-        // Create the pick a card button
-        rollButton = new JButton("Pick Card");
-        rollButton.addActionListener(e -> {
-            String message;
-            
-
-            if (user1Turn) {
-                message = "User 1 drew a " +  (Arrays.toString(Functions.generateRandomDeck(1))); // Generate a random card for user1 when pressed button
-                user1Turn = false;
-                Functions.updateTurnLabel(turnLabel);
-                rollButton.setEnabled(true);
-            } else {
-                message = "User 2 drew a " + (Arrays.toString(Functions.generateRandomDeck(1))); // Generate a random card for user2 when pressed button
-                user1Turn = true;
-                Functions.updateTurnLabel(turnLabel);
-                rollButton.setEnabled(true);
-            }
-
-            JOptionPane.showMessageDialog(frame, message);// output button click message
-        });
-
-        // Create the turn label
-        turnLabel = new JLabel("Turn: User 1");
-
-        // Bind "W" key to roll dice for User 1
-        rollButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "PickUser1");
-        rollButton.getActionMap().put("PickUser1", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (user1Turn) {
-                    rollButton.setEnabled(true);
-                    rollButton.doClick();
-                }
-            }
-        });
-
-        // Bind "Y" key to roll dice for User 2
-        rollButton.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, 0), "PickUser2");
-        rollButton.getActionMap().put("PickUser2", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!user1Turn) {
-                    rollButton.setEnabled(true);
-                    rollButton.doClick();
-                }
-            }
-        });
-
-        // Add the components to the frame
-        frame.add(tilePanel);
-        frame.add(rollButton);
-        frame.add(turnLabel);
-
-        // Set the winning tile in the middle
-        JButton winningTile = tiles[WINNING_TILE];
-        winningTile.setText("WINNER");
-        winningTile.setBackground(Color.YELLOW);
+        // Add the additional tile on the left side
+        tiles[TILE_COUNT - 1] = new JButton(String.valueOf(TILE_COUNT));
+        tiles[TILE_COUNT - 1].setBounds(OUTER_MARGIN, OUTER_MARGIN + tileSize + INNER_MARGIN, tileSize, tileSize);
+        tiles[TILE_COUNT - 1].setHorizontalAlignment(SwingConstants.RIGHT); // Set number alignment to right
+        tiles[TILE_COUNT - 1].setVerticalAlignment(SwingConstants.TOP); // Set number alignment to top
+        tiles[TILE_COUNT - 1].setEnabled(false); // Disable the additional tile button
+        tiles[TILE_COUNT - 1].setBackground(TILE_COLORS[colorIndex]); // Set tile color
+        tilePanel.add(tiles[TILE_COUNT - 1]);
 
         // Set the frame size and visibility
-        frame.setSize(1500, 250);
+        frame.setSize(BOARD_SIZE, BOARD_SIZE);
         frame.setVisible(true);
-
-
-        Functions.blz_exit();
     }
-
 }
