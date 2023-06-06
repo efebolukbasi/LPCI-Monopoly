@@ -9,6 +9,7 @@ public class Main {
     private static final Color[] TILE_COLORS = {Color.BLUE, Color.YELLOW}; // Tile colors (blue and gold)
 
     public static int userTurn =1;
+    public static boolean extraPlayers;
 
     public static void main(String[] args) {
         // Create the main frame
@@ -25,14 +26,14 @@ public class Main {
                                                         // Images //
         // logo in screen
         // Create a JLabel to display the image
-        ImageIcon imageIcon = new ImageIcon("D:/coding/Java Projects/BlitzKrieg/src/Images/lpcimonopoly.png"); // Logo Picture
+        ImageIcon imageIcon = new ImageIcon("src/Images/PantherLogo.png"); // Logo Picture
         JLabel imageLabel = new JLabel(imageIcon);// assign ImageIcon to a JLabel, to be able to paste to screen.
 
         imageLabel.setSize(600,645);
         imageLabel.setLocation(BOARD_SIZE/5,BOARD_SIZE/5);
         tilePanel.add(imageLabel);
 
-ImageIcon chestIcon = new ImageIcon(("D:/coding/Java Projects/BlitzKrieg/src/Images/ChestCard.png"));
+ImageIcon chestIcon = new ImageIcon(("src/Images/ChestCard.png"));
 JLabel chestLabel = new JLabel(chestIcon); // Making image a J label
         chestLabel.setSize(350,450);
         chestLabel.setLocation(350,57);
