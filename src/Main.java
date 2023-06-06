@@ -22,7 +22,7 @@ public class Main {
         tilePanel.setBounds(0, 0, BOARD_SIZE, BOARD_SIZE);
         frame.add(tilePanel);
 
-                                                        // Images //
+        // Images
         // logo in screen
         // Create a JLabel to display the image
         ImageIcon imageIcon = new ImageIcon("D:/coding/Java Projects/BlitzKrieg/src/Images/lpcimonopoly.png"); // Logo Picture
@@ -32,8 +32,8 @@ public class Main {
         imageLabel.setLocation(BOARD_SIZE/5,BOARD_SIZE/5);
         tilePanel.add(imageLabel);
 
-ImageIcon chestIcon = new ImageIcon(("D:/coding/Java Projects/BlitzKrieg/src/Images/ChestCard.png"));
-JLabel chestLabel = new JLabel(chestIcon); // Making image a J label
+        ImageIcon chestIcon = new ImageIcon(("D:/coding/Java Projects/BlitzKrieg/src/Images/ChestCard.png"));
+        JLabel chestLabel = new JLabel(chestIcon); // Making image a J label
         chestLabel.setSize(350,450);
         chestLabel.setLocation(350,57);
 
