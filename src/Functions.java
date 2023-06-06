@@ -72,6 +72,9 @@ public class Functions {
     }
 
 
+
+
+
     /*
     public static int blz_getGameLength(){
         Scanner in = new Scanner(System.in);

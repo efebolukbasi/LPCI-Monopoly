@@ -83,10 +83,48 @@ JLabel chestLabel = new JLabel(chestIcon); // Making image a J label
         tiles[TILE_COUNT - 1].setBackground(TILE_COLORS[colorIndex]); // Set tile color
         tilePanel.add(tiles[TILE_COUNT - 1]);
 
+
+                                                //Game Top Bar Menu//
+            JFrame MenuFrame = new JFrame("Game Menu");
+       // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      //  frame.setSize(400, 300);
+
+            JMenuBar menuBar = new JMenuBar();
+            JMenu menu = new JMenu("GameInfo");
+
+            JMenuItem menuItem1 = new JMenuItem("Credits");
+            JMenuItem menuItem2 = new JMenuItem("Don't Click");
+        menu.add(menuItem1);
+        menu.add(menuItem2);
+
+        menuBar.add(menu);
+        frame.setJMenuBar(menuBar);
+
+
+                                                    ////
+                                            //Add Start Menu//
+JFrame startFrame = new JFrame("Welcome To LPCI Monopoly");
+    JPanel startPanel = new JPanel();
+        startPanel.setBackground(Color.decode("#4bd183"));
+
+        startFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        startFrame.setSize(400, 300);
+        startFrame.setSize(400,400);
+
+
+        startFrame.add(startPanel);
+        startFrame.setResizable(false);// Prevent User from changing the window size
+        startFrame.setVisible(true);
+
+                                                    ///
+
         // Set the frame size and visibility
-        frame.setSize(BOARD_SIZE, BOARD_SIZE);
+        tilePanel.setBackground(Color.decode("#ad66d9"));// set background color (pastel violet)
+        frame.setResizable(false);// Prevent User from changing the window size
+        frame.setSize(BOARD_SIZE, BOARD_SIZE);// set board size
         frame.setVisible(true);
     }
 
 
 }
+
