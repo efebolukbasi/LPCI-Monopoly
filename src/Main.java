@@ -9,6 +9,7 @@ public class Main {
     private static final Color[] TILE_COLORS = {Color.BLUE, Color.YELLOW}; // Tile colors (blue and gold)
 
     public static int userTurn =1;
+    public static boolean extraPlayers;
 
     public static void main(String[] args) {
         // Create the main frame
@@ -22,18 +23,18 @@ public class Main {
         tilePanel.setBounds(0, 0, BOARD_SIZE, BOARD_SIZE);
         frame.add(tilePanel);
 
-        // Images
+                                                        // Images //
         // logo in screen
         // Create a JLabel to display the image
-        ImageIcon imageIcon = new ImageIcon("D:/coding/Java Projects/BlitzKrieg/src/Images/lpcimonopoly.png"); // Logo Picture
+        ImageIcon imageIcon = new ImageIcon("src/Images/PantherLogo.png"); // Logo Picture
         JLabel imageLabel = new JLabel(imageIcon);// assign ImageIcon to a JLabel, to be able to paste to screen.
 
         imageLabel.setSize(600,645);
         imageLabel.setLocation(BOARD_SIZE/5,BOARD_SIZE/5);
         tilePanel.add(imageLabel);
 
-        ImageIcon chestIcon = new ImageIcon(("D:/coding/Java Projects/BlitzKrieg/src/Images/ChestCard.png"));
-        JLabel chestLabel = new JLabel(chestIcon); // Making image a J label
+ImageIcon chestIcon = new ImageIcon(("src/Images/ChestCard.png"));
+JLabel chestLabel = new JLabel(chestIcon); // Making image a J label
         chestLabel.setSize(350,450);
         chestLabel.setLocation(350,57);
 
@@ -82,10 +83,48 @@ public class Main {
         tiles[TILE_COUNT - 1].setBackground(TILE_COLORS[colorIndex]); // Set tile color
         tilePanel.add(tiles[TILE_COUNT - 1]);
 
+
+                                                //Game Top Bar Menu//
+            JFrame MenuFrame = new JFrame("Game Menu");
+       // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      //  frame.setSize(400, 300);
+
+            JMenuBar menuBar = new JMenuBar();
+            JMenu menu = new JMenu("GameInfo");
+
+            JMenuItem menuItem1 = new JMenuItem("Credits");
+            JMenuItem menuItem2 = new JMenuItem("Don't Click");
+        menu.add(menuItem1);
+        menu.add(menuItem2);
+
+        menuBar.add(menu);
+        frame.setJMenuBar(menuBar);
+
+
+                                                    ////
+                                            //Add Start Menu//
+JFrame startFrame = new JFrame("Welcome To LPCI Monopoly");
+    JPanel startPanel = new JPanel();
+        startPanel.setBackground(Color.decode("#4bd183"));
+
+        startFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        startFrame.setSize(400, 300);
+        startFrame.setSize(400,400);
+
+
+        startFrame.add(startPanel);
+        startFrame.setResizable(false);// Prevent User from changing the window size
+        startFrame.setVisible(true);
+
+                                                    ///
+
         // Set the frame size and visibility
-        frame.setSize(BOARD_SIZE, BOARD_SIZE);
+        tilePanel.setBackground(Color.decode("#ad66d9"));// set background color (pastel violet)
+        frame.setResizable(false);// Prevent User from changing the window size
+        frame.setSize(BOARD_SIZE, BOARD_SIZE);// set board size
         frame.setVisible(true);
     }
 
 
 }
+
