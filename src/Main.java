@@ -8,6 +8,8 @@ public class Main {
     private static final int INNER_MARGIN = BOARD_SIZE / 40; // Inner margin size in pixels
     private static final Color[] TILE_COLORS = {Color.BLUE, Color.YELLOW}; // Tile colors (blue and gold)
 
+    public static int userTurn =1;
+
     public static void main(String[] args) {
         // Create the main frame
         JFrame frame = new JFrame("Monopoly Board");
@@ -19,6 +21,26 @@ public class Main {
         tilePanel.setLayout(null); // Use absolute layout
         tilePanel.setBounds(0, 0, BOARD_SIZE, BOARD_SIZE);
         frame.add(tilePanel);
+
+                                                        // Images //
+        // logo in screen
+        // Create a JLabel to display the image
+        ImageIcon imageIcon = new ImageIcon("D:/coding/Java Projects/BlitzKrieg/src/Images/lpcimonopoly.png"); // Logo Picture
+        JLabel imageLabel = new JLabel(imageIcon);// assign ImageIcon to a JLabel, to be able to paste to screen.
+
+        imageLabel.setSize(600,645);
+        imageLabel.setLocation(BOARD_SIZE/5,BOARD_SIZE/5);
+        tilePanel.add(imageLabel);
+
+ImageIcon chestIcon = new ImageIcon(("D:/coding/Java Projects/BlitzKrieg/src/Images/ChestCard.png"));
+JLabel chestLabel = new JLabel(chestIcon); // Making image a J label
+        chestLabel.setSize(350,450);
+        chestLabel.setLocation(350,57);
+
+        tilePanel.add(chestLabel);
+
+
+        //////////////
 
         // Create the tiles
         JButton[] tiles = new JButton[TILE_COUNT];
@@ -64,4 +86,6 @@ public class Main {
         frame.setSize(BOARD_SIZE, BOARD_SIZE);
         frame.setVisible(true);
     }
+
+
 }
