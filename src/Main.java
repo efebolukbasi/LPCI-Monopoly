@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.Scanner;
 import java.util.Random;
+import java.util.Arrays;
 public class Main {
     private static final int TILE_COUNT = 32;
     private static final int BOARD_SIZE = 1080; // Board size in pixels
@@ -17,12 +18,40 @@ public class Main {
         Random rand = new Random();
 
         int numPlayers;
-
         do {
             System.out.print("How many players: ");
             numPlayers = in.nextInt();
+        } while (numPlayers <= 0);
 
-        } while (numPlayers <= 1 || numPlayers >= 5);
+        in.nextLine(); // Consume the newline character
+
+        String[] playerNames = new String[numPlayers];
+
+        for (int i = 0; i < numPlayers; i++) {
+            String playerName;
+            boolean validName;
+
+            do {
+                System.out.print("Enter name for Player " + (i + 1) + ": ");
+                playerName = in.nextLine();
+
+                validName = true;
+                for (int j = 0; j < i; j++) {
+                    if (playerName.equalsIgnoreCase(playerNames[j])) {
+                        validName = false;
+                        System.out.println("Name already taken. Please enter a different name.");
+                        break;
+                    }
+                }
+            } while (!validName);
+
+            playerNames[i] = playerName;
+        }
+
+        System.out.println("Player names:");
+        for (int i = 0; i < numPlayers; i++) {
+            System.out.println("Player " + (i + 1) + ": " + playerNames[i]);
+        }
 
         // Create the main frame
         JFrame frame = new JFrame("Monopoly Board");
@@ -114,6 +143,54 @@ public class Main {
         tiles[TILE_COUNT - 1].setEnabled(false); // Disable the additional tile button
         tiles[TILE_COUNT - 1].setBackground(TILE_COLORS[colorIndex]); // Set tile color
         tilePanel.add(tiles[TILE_COUNT - 1]);
+
+        // Player info
+        String [] playerMoney = {"$1200", "$1200", "$1200", "$1200"};
+        String [] playerProperties = {" ", " ", " ", ""};
+
+        Font font = new Font("SansSerif", Font.BOLD, 16);
+
+        if (numPlayers == 3){
+            // Player 3 Information Text
+            JLabel player3 = new JLabel(playerNames[2] + ": "  + playerMoney[2]);
+            player3.setBounds(220, 825, 150, 30);
+            player3.setForeground(Color.BLACK);
+            player3.setFont(font);
+            tilePanel.add(player3);
+        }
+        if (numPlayers == 4){
+            // Player 3 Information Text
+            JLabel player3 = new JLabel(playerNames[2] + ": "  + playerMoney[2]);
+            player3.setBounds(220, 825, 150, 30);
+            player3.setForeground(Color.BLACK);
+            player3.setFont(font);
+            tilePanel.add(player3);
+            // Player 4 Information Text
+            JLabel player4 = new JLabel(playerNames[3] + ": "  + playerMoney[3]);
+            player4.setBounds(700, 825, 150, 30);
+            player4.setForeground(Color.BLACK);
+            player4.setFont(font);
+            tilePanel.add(player4);
+
+        }
+
+        // Player 1 Information Text
+        JLabel player1 = new JLabel(playerNames[0] + ": "  + playerMoney[0]);
+        player1.setBounds(220, 715, 150, 30);
+        player1.setForeground(Color.BLACK);
+        player1.setFont(font);
+        tilePanel.add(player1);
+
+        // Player 2 Information Text
+        JLabel player2 = new JLabel(playerNames[1] + ": " + playerMoney[1]);
+        player2.setBounds(700, 715, 150, 30);
+        player2.setForeground(Color.BLACK);
+        player2.setFont(font);
+        tilePanel.add(player2);
+
+
+
+
 
         // Set the frame size and visibility
         frame.setSize(BOARD_SIZE, BOARD_SIZE);
