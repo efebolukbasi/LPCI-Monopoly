@@ -1,4 +1,7 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
@@ -71,7 +74,57 @@ public class Functions {
         return numPlayers;
     }
 
+public static void IntroMenu(){// intro menu screen
+    ////
+    //Add Start Menu//
+    JFrame startFrame = new JFrame("Welcome To LPCI Monopoly");
+    JPanel startPanel = new JPanel();
+    startPanel.setBackground(Color.decode("#4bd183"));
 
+    startFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    startFrame.setSize(400, 300);
+    startFrame.setSize(400,400);
+
+    JButton startButton1 = new JButton("Start Game");
+
+    startButton1.setBounds(100,100,100, 40);
+
+    //startButton1.setLocation(0,100);
+
+
+    startButton1.addActionListener(new ActionListener(){// button add action listener
+        public void actionPerformed(ActionEvent e){
+            //
+            startPanel.removeAll();  // Remove all components from the panel
+            startPanel.revalidate(); // Revalidate the panel to update the layout
+            startPanel.repaint();    // Repaint the panel to reflect the changes
+            Main.mode = true;
+            // System.out.print(mode);
+        }
+    });// ends here
+    ImageIcon startImageIcon = new ImageIcon("src/Images/PantherLogo.png"); // Logo Picture
+    JLabel startImageLabel = new JLabel(startImageIcon);// assign ImageIcon to a JLabel, to be able to paste to screen.
+
+    startImageLabel.setBounds(0,0,200,245);
+
+
+
+
+
+
+    startFrame.add(startPanel);// add the pannel into the frame
+
+    startPanel.add(startButton1);
+    startPanel.add(startImageLabel);
+
+
+
+
+
+
+    startFrame.setResizable(false);// Prevent User from changing the window size
+    startFrame.setVisible(true);
+}
 
 
 

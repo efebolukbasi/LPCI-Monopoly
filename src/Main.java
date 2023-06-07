@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class Main {
     private static final int TILE_COUNT = 32;
@@ -10,6 +11,8 @@ public class Main {
 
     public static int userTurn =1;
     public static boolean extraPlayers;
+
+    public static boolean mode = false;
 
     public static void main(String[] args) {
         // Create the main frame
@@ -100,23 +103,14 @@ JLabel chestLabel = new JLabel(chestIcon); // Making image a J label
         menuBar.add(menu);
         frame.setJMenuBar(menuBar);
 
-
-                                                    ////
-                                            //Add Start Menu//
-JFrame startFrame = new JFrame("Welcome To LPCI Monopoly");
-    JPanel startPanel = new JPanel();
-        startPanel.setBackground(Color.decode("#4bd183"));
-
-        startFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        startFrame.setSize(400, 300);
-        startFrame.setSize(400,400);
+        Functions.IntroMenu();// call menu function
 
 
-        startFrame.add(startPanel);
-        startFrame.setResizable(false);// Prevent User from changing the window size
-        startFrame.setVisible(true);
 
                                                     ///
+
+
+
 
         // Set the frame size and visibility
         tilePanel.setBackground(Color.decode("#ad66d9"));// set background color (pastel violet)
