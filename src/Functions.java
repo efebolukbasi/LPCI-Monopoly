@@ -24,13 +24,6 @@ public class Functions {
 
         return deck;
     }
-    public static void updateTurnLabel(JLabel label) {
-        if (Main.user1Turn) {
-            label.setText("Turn: User 1");
-        } else {
-            label.setText("Turn: User 2");
-        }
-    }
 
     public static void blz_exit(){
         Scanner in = new Scanner(System.in);
@@ -83,8 +76,13 @@ public class Functions {
         }
 
 
-return gameLength;
+        return gameLength;
 
     }
 
+    public static int rollDice() {
+        Random rand = new Random();
+
+        return rand.nextInt(1,7);
+    }
 }
