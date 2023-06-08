@@ -11,6 +11,7 @@ public class Main {
     private static final int OUTER_MARGIN = BOARD_SIZE / 20; // Outer margin size in pixels
     private static final int INNER_MARGIN = BOARD_SIZE / 40; // Inner margin size in pixels
     private static final Color[] TILE_COLORS = {Color.BLUE, Color.YELLOW}; // Tile colors (blue and gold)
+    private static final int NAME_CAP = 10; // Name cap length
 
 
     public static void main(String[] args) {
@@ -43,11 +44,12 @@ public class Main {
                         break;
                     }
                 }
-            } while (!validName);
+            } while (!validName || playerName.length() >= NAME_CAP);
 
             playerNames[i] = playerName;
         }
 
+        // FOR TESTING - TO BE DELETED
         System.out.println("Player names:");
         for (int i = 0; i < numPlayers; i++) {
             System.out.println("Player " + (i + 1) + ": " + playerNames[i]);
@@ -70,7 +72,6 @@ public class Main {
         // Create a JLabel to display the image
         ImageIcon imageIcon = new ImageIcon("src/Images/PantherLogo.png"); // Logo Picture
         JLabel imageLabel = new JLabel(imageIcon);// assign ImageIcon to a JLabel, to be able to paste to screen.
-
         imageLabel.setSize(600,645);
         imageLabel.setLocation(BOARD_SIZE/5,BOARD_SIZE/5);
         tilePanel.add(imageLabel);
@@ -79,7 +80,6 @@ public class Main {
         JLabel chestLabel = new JLabel(chestIcon); // Making image a J label
         chestLabel.setSize(350,450);
         chestLabel.setLocation(350,57);
-
         tilePanel.add(chestLabel);
 
         // COORDINATE FINDER
@@ -111,7 +111,7 @@ public class Main {
         int col = 0;
         int colorIndex = 0; // Index for tile colors
         int i = 0;
-        while (i < TILE_COUNT - 1) {
+        while (i < TILE_COUNT) {
             if (row == 0 || row == 8 || col == 0 || col == 8) {
                 tiles[i] = new JButton(String.valueOf(i + 1));
                 tiles[i].setBounds(OUTER_MARGIN + col * (tileSize + INNER_MARGIN),
@@ -135,27 +135,17 @@ public class Main {
             colorIndex = (colorIndex + 1) % TILE_COLORS.length; // Update tile color index
         }
 
-        // Add the additional tile on the left side
-        tiles[TILE_COUNT - 1] = new JButton(String.valueOf(TILE_COUNT));
-        tiles[TILE_COUNT - 1].setBounds(OUTER_MARGIN, OUTER_MARGIN + tileSize + INNER_MARGIN, tileSize, tileSize);
-        tiles[TILE_COUNT - 1].setHorizontalAlignment(SwingConstants.RIGHT); // Set number alignment to right
-        tiles[TILE_COUNT - 1].setVerticalAlignment(SwingConstants.TOP); // Set number alignment to top
-        tiles[TILE_COUNT - 1].setEnabled(false); // Disable the additional tile button
-        tiles[TILE_COUNT - 1].setBackground(TILE_COLORS[colorIndex]); // Set tile color
-        tilePanel.add(tiles[TILE_COUNT - 1]);
-
         // Player info
         String [] playerMoney = {"$1200", "$1200", "$1200", "$1200"};
-        String [] playerProperties = {" ", " ", " ", ""};
-
-        Font font = new Font("SansSerif", Font.BOLD, 16);
+        Font playerNameFont = new Font("SansSerif", Font.BOLD, 16);
+        Font tileFont = new Font("SansSerif", Font.BOLD, 13);
 
         if (numPlayers == 3){
             // Player 3 Information Text
             JLabel player3 = new JLabel(playerNames[2] + ": "  + playerMoney[2]);
             player3.setBounds(220, 825, 150, 30);
             player3.setForeground(Color.BLACK);
-            player3.setFont(font);
+            player3.setFont(playerNameFont);
             tilePanel.add(player3);
         }
         if (numPlayers == 4){
@@ -163,13 +153,13 @@ public class Main {
             JLabel player3 = new JLabel(playerNames[2] + ": "  + playerMoney[2]);
             player3.setBounds(220, 825, 150, 30);
             player3.setForeground(Color.BLACK);
-            player3.setFont(font);
+            player3.setFont(playerNameFont);
             tilePanel.add(player3);
             // Player 4 Information Text
             JLabel player4 = new JLabel(playerNames[3] + ": "  + playerMoney[3]);
             player4.setBounds(700, 825, 150, 30);
             player4.setForeground(Color.BLACK);
-            player4.setFont(font);
+            player4.setFont(playerNameFont);
             tilePanel.add(player4);
 
         }
@@ -178,16 +168,24 @@ public class Main {
         JLabel player1 = new JLabel(playerNames[0] + ": "  + playerMoney[0]);
         player1.setBounds(220, 715, 150, 30);
         player1.setForeground(Color.BLACK);
-        player1.setFont(font);
+        player1.setFont(playerNameFont);
         tilePanel.add(player1);
 
         // Player 2 Information Text
         JLabel player2 = new JLabel(playerNames[1] + ": " + playerMoney[1]);
         player2.setBounds(700, 715, 150, 30);
         player2.setForeground(Color.BLACK);
-        player2.setFont(font);
+        player2.setFont(playerNameFont);
         tilePanel.add(player2);
 
+        // Office Image 25th tile - 24th in array
+        ImageIcon officeTile = new ImageIcon(("src/Images/office.jpg"));
+        Image scaleImage = officeTile.getImage().getScaledInstance(75,50,Image.SCALE_DEFAULT);
+        officeTile.setImage(scaleImage);
+        JLabel principalTilePic = new JLabel(officeTile); // Making image a J label
+        principalTilePic.setSize(75,50);
+        principalTilePic.setLocation(57,970);
+        tilePanel.add(principalTilePic, 0);
 
 
 
