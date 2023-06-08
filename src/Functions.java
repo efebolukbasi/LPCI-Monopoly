@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
-
+import javax.swing.text.*;
 public class Functions {
 
   // constants
@@ -108,13 +108,17 @@ public class Functions {
     //startButton1.setLocation(0,100);
 
 
-    JButton exitButton = new JButton("Exit");
+    JButton exitButton = new JButton("Exit");//exit game button
 
     exitButton.setBounds(280,10,85, 30);
 
-    JButton creditsButton = new JButton("Credits");
+    JButton creditsButton = new JButton("Credits");// credits button
 
     creditsButton.setBounds(150,10,85, 30);
+
+        JButton backButton = new JButton("Back");// back button from credits
+
+        backButton.setBounds(20,10,85, 30);
 
 
     startButton.addActionListener(new ActionListener(){// button add action listener
@@ -137,11 +141,35 @@ public class Functions {
             startPanel.removeAll();  // Remove all components from the panel
             startPanel.revalidate(); // Revalidate the panel to update the layout
             startPanel.repaint();    // Repaint the panel to reflect the changes
-            JTextArea credits = new JTextArea("Credits");
-            credits.setBounds(150,20,50,20);
+            JLabel credits = new JLabel("Credits");
+            credits.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size to 20
+            credits.setBounds(150,20,80,20);
+            credits.setOpaque(false);// make background Transparent
             startPanel.add(credits);
+            ////----
+            JLabel creditNames = new JLabel("Creators:Oliver.S & Efe.B");// game credits
+            creditNames.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size to 20
+            creditNames.setBounds(15,-50,400,300);
+            creditNames.setOpaque(false);// make background Transparent
+            startPanel.add(creditNames);
+
+            JLabel userThank = new JLabel("Thanks for Playing");// thanks for playing message
+            userThank.setFont(new Font("Arial", Font.BOLD, 40)); // Set font size to 40
+            userThank.setBounds(10,20,400,300);
+            userThank.setOpaque(false);// make background Transparent
+
+            startPanel.add(userThank);// add to starting panel
 
 
+
+
+            startPanel.add(backButton);// back to menu button
+            backButton.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    startFrame.dispose();// removes window
+                    IntroMenu();//recall start menu function
+                }
+            });
         }
     });// ends here
 
@@ -278,7 +306,39 @@ public class Functions {
         frame.setVisible(true);
     }
 
+public static void diceMiniGame(){
 
+        JFrame diceFrame = new JFrame("Mr.Reeds Dice House");
+        JPanel dicePanel = new JPanel();
+        dicePanel.setBackground(Color.decode("#361521"));
+    diceFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    diceFrame.setSize(400, 400);
+    dicePanel.setSize(400,400);
+    dicePanel.setLayout(null);
+
+
+// mini game title
+    JLabel diceName = new JLabel("Mr.Reid's Dice House");// game credits
+    diceName.setFont(new Font("Arial", Font.BOLD, 30)); // Set font size to 20
+    diceName.setForeground(Color.white);
+    diceName.setBounds(40,-70,400,200);
+
+
+    diceName.setOpaque(false);// make background Transparent
+    dicePanel.add(diceName);
+
+JLabel pDice1 = new JLabel();
+    JLabel pDice2 = new JLabel();
+    JLabel pcDice1 = new JLabel();
+    JLabel pcDice2 = new JLabel();
+
+
+
+    diceFrame.add(dicePanel);// add the panel into the frame
+    diceFrame.setResizable(false);// Prevent User from changing the window size
+    diceFrame.setVisible(true);
+
+    }
 
 
 
