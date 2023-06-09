@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 public class Functions {
 
     // constants
@@ -14,6 +16,8 @@ public class Functions {
     private static final int OUTER_MARGIN = BOARD_SIZE / 20; // Outer margin size in pixels
     private static final int INNER_MARGIN = BOARD_SIZE / 40; // Inner margin size in pixels
     private static final Color[] TILE_COLORS = {Color.BLUE, Color.YELLOW}; // Tile colors (blue and gold)
+    private static final int STARTING_MONEY = 600;
+    private static final int[] tileValues = new int[TILE_COUNT];
 
     private static int[] playerPositions;
     private static String[] playerNames;
@@ -25,11 +29,15 @@ public class Functions {
     private static JLabel[] playerImageLabels;
     private static int numPlayers;
 
+
 ///
     public static void gameSettings(){
 
         Scanner in = new Scanner(System.in);
-
+// TILE VALUES
+ for (int i = 0; i < TILE_COUNT; i++) {
+     tileValues[i] = (int)(Math.random() * 201) - 100; // Random values between -100 and 100
+          }
 
         do {
             System.out.print("How many players: ");
@@ -230,6 +238,14 @@ public class Functions {
                 tiles[i].setEnabled(false); // Disable the tile button
                 tiles[i].setBackground(TILE_COLORS[colorIndex]); // Set tile color
                 tilePanel.add(tiles[i]);
+
+                // CODE TO CLICK TILES TO SEE VALUES OF TILES - optional
+                 final int tileIndex = i;  // Necessary to allow the mouse listener to reference the tile's index
+                 tiles[i].addMouseListener(new MouseAdapter() {
+                 public void mouseClicked(MouseEvent e) {
+                 JOptionPane.showMessageDialog(null, "Tile " + (tileIndex + 1) + " value: " + tileValues[tileIndex]);
+                 }});             // END OF CODE TO CLICK TILES TO SEE VALUES OF TILES
+
                 i++;
             }
             if (col < 8 && row == 0) {
@@ -279,7 +295,9 @@ public class Functions {
         }
 
         // Player info
-        String[] playerMoney = { "$1200", "$1200", "$1200", "$1200" };
+        int[] playerMoney = new int[numPlayers];
+        Arrays.fill(playerMoney, STARTING_MONEY);
+
 
         // POSITIONS
         playerPositions = new int[numPlayers];
@@ -313,13 +331,14 @@ public class Functions {
                         hasRolled[currentPlayerIndex] = true;
                         rollButtons[currentPlayerIndex].setEnabled(false);
 
-                        int diceRoll = rollDice();
+                        int diceRoll = Functions.rollDice();
                         updatePlayerPosition(currentPlayerIndex, diceRoll);
                         JOptionPane.showMessageDialog(frame,
                                 playerNames[currentPlayerIndex] + " rolled a " + diceRoll + ".");
+                        playerMoney[currentPlayerIndex] += tileValues[playerPositions[currentPlayerIndex]]; // Update player's money
+                        playerLabels[currentPlayerIndex].setText(playerNames[currentPlayerIndex] + ": $" + playerMoney[currentPlayerIndex]); // Update player's money display
 
-                        currentPlayerLabel.setText("Current Turn: " + playerNames[(currentPlayerIndex + 1)
-                                % finalNumPlayers]);
+                        currentPlayerLabel.setText("Current Turn: " + playerNames[(currentPlayerIndex + 1) % finalNumPlayers]);
 
                         // Check if all players have rolled
                         boolean allPlayersRolled = true;
