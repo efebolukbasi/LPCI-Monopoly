@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Scanner;
 import java.util.Arrays;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Main {
     private static final int TILE_COUNT = 32;
@@ -13,6 +15,7 @@ public class Main {
     private static final Color[] TILE_COLORS = { Color.cyan, Color.PINK }; // Tile colors (blue and gold)
     private static final String BACKGROUND_COLOR = "#AD66D9"; // Background color of entire screen
     private static final int NAME_CAP = 10; // Name cap length
+    private static final int STARTING_MONEY = 600;
 
     private static int[] playerPositions;
     private static String[] playerNames;
@@ -107,7 +110,18 @@ public class Main {
             tiles[i].setEnabled(false); // Disable the tile button
             tiles[i].setBackground(TILE_COLORS[colorIndex]); // Set tile color
             tilePanel.add(tiles[i]);
-            i++;
+
+            // CODE TO CLICK TILES TO SEE VALUES OF TILES - optional
+            final int tileIndex = i;  // Necessary to allow the mouse listener to reference the tile's index
+            tiles[i].addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    JOptionPane.showMessageDialog(null, "Tile " + (tileIndex + 1) + " value: " + tileValues[tileIndex]);
+                }
+            });
+            // END OF CODE TO CLICK TILES TO SEE VALUES OF TILES
+
+            i++; // manually updating i variable
+
             if (col < 8 && row == 0) {
                 col++;
             } else if (row < 8 && col == 8) {
@@ -119,6 +133,7 @@ public class Main {
             }
             colorIndex = (colorIndex + 1) % TILE_COLORS.length; // Update tile color index
         }
+
         // Player Logo's
         ImageIcon[] playerIcons = {
                 new ImageIcon("src/Images/p1.png"),
@@ -143,7 +158,8 @@ public class Main {
         }
 
         // Player info
-        int[] playerMoney = {1200, 1200, 1200, 1200};
+        int[] playerMoney = new int[numPlayers];
+        Arrays.fill(playerMoney, STARTING_MONEY);
 
         // POSITIONS
         playerPositions = new int[numPlayers];
@@ -231,7 +247,7 @@ public class Main {
             int x = 450; // Match this with the x-coordinate of the CurrentTurn label - could set to variable if wanted to move them together
             int y = 775 + j * 30; // Starts below the CurrentTurn label, adjust as needed
 
-            playerLegendLabels[j].setBounds(x, y, 120, 30); // Adjust the size if necessary
+            playerLegendLabels[j].setBounds(x, y, 200, 30); // Adjust the size if necessary
 
             // Add the label to the panel
             tilePanel.add(playerLegendLabels[j]);
