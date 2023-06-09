@@ -5,13 +5,9 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
-import javax.swing.text.*;
 public class Functions {
 
   // constants
-
-
-
     public static final int NAME_CAP = 10; // Name cap length
     private static final int TILE_COUNT = 32;
     private static final int BOARD_SIZE = 1080; // Board size in pixels
