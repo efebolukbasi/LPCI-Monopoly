@@ -22,11 +22,18 @@ public class Main {
     private static JLabel currentPlayerLabel;
     private static int tileSize;
     private static JLabel[] playerImageLabels;
+    private static int numPlayers;
+    private static final int[] tileValues = new int[TILE_COUNT];
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
 
-        int numPlayers;
+        // TILE VALUES
+        for (int i = 0; i < TILE_COUNT; i++) {
+            tileValues[i] = (int)(Math.random() * 201) - 100; // Random values between -100 and 100
+        }
+
+        // NUM OF PLAYERS LOOP
         do {
             System.out.print("How many players: ");
             numPlayers = in.nextInt();
@@ -136,7 +143,7 @@ public class Main {
         }
 
         // Player info
-        String[] playerMoney = { "$1200", "$1200", "$1200", "$1200" };
+        int[] playerMoney = {1200, 1200, 1200, 1200};
 
         // POSITIONS
         playerPositions = new int[numPlayers];
@@ -151,7 +158,7 @@ public class Main {
 
         for (int j = 0; j < numPlayers; j++) {
             // Player Information Text
-            playerLabels[j] = new JLabel(playerNames[j] + ": " + playerMoney[j]);
+            playerLabels[j] = new JLabel(playerNames[j] + ": $ " + playerMoney[j]);
             playerLabels[j].setBounds(220 + 480 * (j % 2), 715 + 110 * (j / 2), 150, 30);
             playerLabels[j].setForeground(Color.BLACK);
             playerLabels[j].setFont(playerNameFont);
@@ -174,9 +181,10 @@ public class Main {
                         updatePlayerPosition(currentPlayerIndex, diceRoll);
                         JOptionPane.showMessageDialog(frame,
                                 playerNames[currentPlayerIndex] + " rolled a " + diceRoll + ".");
+                        playerMoney[currentPlayerIndex] += tileValues[playerPositions[currentPlayerIndex]]; // Update player's money
+                        playerLabels[currentPlayerIndex].setText(playerNames[currentPlayerIndex] + ": $" + playerMoney[currentPlayerIndex]); // Update player's money display
 
-                        currentPlayerLabel.setText("Current Turn: " + playerNames[(currentPlayerIndex + 1)
-                                % finalNumPlayers]);
+                        currentPlayerLabel.setText("Current Turn: " + playerNames[(currentPlayerIndex + 1) % finalNumPlayers]);
 
                         // Check if all players have rolled
                         boolean allPlayersRolled = true;
@@ -265,6 +273,6 @@ public class Main {
         int y = OUTER_MARGIN + INNER_MARGIN + (tileSize - 25 - playerImageLabels[playerIndex].getHeight()) / 2 + newRow * (tileSize + INNER_MARGIN);
 
         playerImageLabels[playerIndex].setLocation(x, y);
-        playerLabels[playerIndex].setText(playerNames[playerIndex] + ": " + "$1200");
+        //playerLabels[playerIndex].setText(playerNames[playerIndex] + ": " + "$1200");
     }
 }
