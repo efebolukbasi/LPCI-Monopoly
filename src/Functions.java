@@ -1,26 +1,25 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 public class Functions {
 
     // constants
     public static final int NAME_CAP = 10; // Name cap length
-    private static final int TILE_COUNT = 32;
+    private static final int TILE_COUNT = 32; // Number of tiles around the board
     private static final int BOARD_SIZE = 1080; // Board size in pixels
     private static final int OUTER_MARGIN = BOARD_SIZE / 20; // Outer margin size in pixels
     private static final int INNER_MARGIN = BOARD_SIZE / 40; // Inner margin size in pixels
-    private static final Color[] TILE_COLORS = {Color.CYAN, Color.PINK}; // Tile colors (blue and gold)
-    private static final int STARTING_MONEY = 600;
-    private static final int[] tileValues = new int[TILE_COUNT];
     private static final String DICE_HOUSE_BACKGROUND_COLOR = "#361521"; // Hex value for dice house minigame
     private static final String START_BACKGROUND_COLOR = "#4BD183"; // Hex value for start menu color
     private static final String BACKGROUND_COLOR = "#AD66D9"; // Final value to hold the hex value of color for background
+    private static final Color[] TILE_COLORS = {Color.CYAN, Color.PINK}; // Tile colors (blue and gold)
+    private static final int STARTING_MONEY = 600;
+    private static final int[] tileValues = new int[TILE_COUNT];
+
 
     private static int[] playerPositions;
     private static String[] playerNames;
@@ -105,66 +104,56 @@ public class Functions {
         backButton.setBounds(20,10,85, 30);
 
 
-        startButton.addActionListener(new ActionListener(){// button add action listener
-            public void actionPerformed(ActionEvent e){
-                //
-                startPanel.removeAll();  // Remove all components from the panel
-                startPanel.revalidate(); // Revalidate the panel to update the layout
-                startPanel.repaint();    // Repaint the panel to reflect the changes
-                gameBoard();
+        // button add action listener
+        startButton.addActionListener(e -> {
+            //
+            startPanel.removeAll();  // Remove all components from the panel
+            startPanel.revalidate(); // Revalidate the panel to update the layout
+            startPanel.repaint();    // Repaint the panel to reflect the changes
+            gameBoard();
 
 
-                startFrame.dispose();
-                // System.out.print(mode);
-            }
+            startFrame.dispose();
+            // System.out.print(mode);
         });// ends here
 
-        creditsButton.addActionListener(new ActionListener(){// credits button
-            public void actionPerformed(ActionEvent e){
-                //
-                startPanel.removeAll();  // Remove all components from the panel
-                startPanel.revalidate(); // Revalidate the panel to update the layout
-                startPanel.repaint();    // Repaint the panel to reflect the changes
-                JLabel credits = new JLabel("Credits");
-                credits.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size to 20
-                credits.setBounds(150,20,80,20);
-                credits.setOpaque(false);// make background Transparent
-                startPanel.add(credits);
-                ////----
-                JLabel creditNames = new JLabel("Creators: Oliver.S & Efe.B");// game credits
-                creditNames.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size to 20
-                creditNames.setBounds(15,-50,400,300);
-                creditNames.setOpaque(false);// make background Transparent
-                startPanel.add(creditNames);
+        exitButton.addActionListener(e -> {
+            startFrame.dispose(); // if exit button is pressed, exit the entire game
+        });
 
-                JLabel userThank = new JLabel("Thanks for Playing");// thanks for playing message
-                userThank.setFont(new Font("Arial", Font.BOLD, 40)); // Set font size to 40
-                userThank.setBounds(10,20,400,300);
-                userThank.setOpaque(false);// make background Transparent
+        // credits button
+        creditsButton.addActionListener(e -> {
+            //
+            startPanel.removeAll();  // Remove all components from the panel
+            startPanel.revalidate(); // Revalidate the panel to update the layout
+            startPanel.repaint();    // Repaint the panel to reflect the changes
+            JLabel credits = new JLabel("Credits");
+            credits.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size to 20
+            credits.setBounds(150,20,80,20);
+            credits.setOpaque(false);// make background Transparent
+            startPanel.add(credits);
+            ////----
+            JLabel creditNames = new JLabel("Creators: Oliver.S & Efe.B");// game credits
+            creditNames.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size to 20
+            creditNames.setBounds(15,-50,400,300);
+            creditNames.setOpaque(false);// make background Transparent
+            startPanel.add(creditNames);
 
-                startPanel.add(userThank);// add to starting panel
+            JLabel userThank = new JLabel("Thanks for Playing");// thanks for playing message
+            userThank.setFont(new Font("Arial", Font.BOLD, 40)); // Set font size to 40
+            userThank.setBounds(10,20,400,300);
+            userThank.setOpaque(false);// make background Transparent
 
-
-
-
-                startPanel.add(backButton);// back to menu button
-                backButton.addActionListener(new ActionListener(){
-                    public void actionPerformed(ActionEvent e){
-                        startFrame.dispose();// removes window
-                        IntroMenu();//recall start menu function
-                    }
-                });
-            }
-        });// ends here
+            startPanel.add(userThank);// add to starting panel
 
 
-        exitButton.addActionListener(new ActionListener(){// exit button action listener
-            public void actionPerformed(ActionEvent e){
-                //
-                System.exit(914);// user pressed exit
 
 
-            }
+            startPanel.add(backButton);// back to menu button
+            backButton.addActionListener(e1 -> {
+                startFrame.dispose();// removes window
+                IntroMenu();//recall start menu function
+            });
         });// ends here
 
         ImageIcon startImageIcon = new ImageIcon("src/Images/PantherLogo.png"); // Logo Picture
@@ -325,38 +314,35 @@ public class Functions {
             rollButtons[j].setFont(tileFont);
             final int currentPlayerIndex = j;
             int finalNumPlayers = numPlayers;
-            rollButtons[j].addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (!hasRolled[currentPlayerIndex]) {
-                        hasRolled[currentPlayerIndex] = true;
-                        rollButtons[currentPlayerIndex].setEnabled(false);
+            rollButtons[j].addActionListener(e -> {
+                if (!hasRolled[currentPlayerIndex]) {
+                    hasRolled[currentPlayerIndex] = true;
+                    rollButtons[currentPlayerIndex].setEnabled(false);
 
-                        int diceRoll = Functions.rollDice();
-                        updatePlayerPosition(currentPlayerIndex, diceRoll);
-                        JOptionPane.showMessageDialog(frame,
-                                playerNames[currentPlayerIndex] + " rolled a " + diceRoll + ".");
-                        playerMoney[currentPlayerIndex] += tileValues[playerPositions[currentPlayerIndex]]; // Update player's money
-                        playerLabels[currentPlayerIndex].setText(playerNames[currentPlayerIndex] + ": $" + playerMoney[currentPlayerIndex]); // Update player's money display
+                    int diceRoll = Functions.rollDice();
+                    updatePlayerPosition(currentPlayerIndex, diceRoll);
+                    JOptionPane.showMessageDialog(frame,
+                            playerNames[currentPlayerIndex] + " rolled a " + diceRoll + ".");
+                    playerMoney[currentPlayerIndex] += tileValues[playerPositions[currentPlayerIndex]]; // Update player's money
+                    playerLabels[currentPlayerIndex].setText(playerNames[currentPlayerIndex] + ": $" + playerMoney[currentPlayerIndex]); // Update player's money display
 
-                        currentPlayerLabel.setText("Current Turn: " + playerNames[(currentPlayerIndex + 1) % finalNumPlayers]);
+                    currentPlayerLabel.setText("Current Turn: " + playerNames[(currentPlayerIndex + 1) % finalNumPlayers]);
 
-                        // Check if all players have rolled
-                        boolean allPlayersRolled = true;
-                        for (boolean rolled : hasRolled) {
-                            if (!rolled) {
-                                allPlayersRolled = false;
-                                break;
-                            }
+                    // Check if all players have rolled
+                    boolean allPlayersRolled = true;
+                    for (boolean rolled : hasRolled) {
+                        if (!rolled) {
+                            allPlayersRolled = false;
+                            break;
                         }
+                    }
 
-                        // Enable roll buttons for all players if all have rolled
-                        if (allPlayersRolled) {
-                            for (JButton button : rollButtons) {
-                                button.setEnabled(true);
-                            }
-                            Arrays.fill(hasRolled, false);
+                    // Enable roll buttons for all players if all have rolled
+                    if (allPlayersRolled) {
+                        for (JButton button : rollButtons) {
+                            button.setEnabled(true);
                         }
+                        Arrays.fill(hasRolled, false);
                     }
                 }
             });
@@ -474,5 +460,7 @@ public class Functions {
         playerImageLabels[playerIndex].setLocation(x, y);
         //playerLabels[playerIndex].setText(playerNames[playerIndex] + ": " + "$1200"); //- may be needed
     }
+
+
 
 }// end of Functions class
