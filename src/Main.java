@@ -207,7 +207,27 @@ public class Main {
         currentPlayerLabel.setFont(playerNameFont);
         tilePanel.add(currentPlayerLabel);
 
-        // Legen
+        // Legend
+        JLabel[] playerLegendLabels = new JLabel[numPlayers];
+        for (int j = 0; j < numPlayers; j++) {
+            // Scale and set the logo
+            Image scaledImage = playerIcons[j].getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+            // Create a new label with the player's name and their logo
+            playerLegendLabels[j] = new JLabel(scaledIcon);
+            playerLegendLabels[j].setText(" = " + playerNames[j]);
+            playerLegendLabels[j].setFont(new Font("SansSerif", Font.BOLD, 15));
+
+            // Set the location of the label
+            int x = 450; // Match this with the x-coordinate of the CurrentTurn label - could set to variable if wanted to move them together
+            int y = 775 + j * 30; // Starts below the CurrentTurn label, adjust as needed
+
+            playerLegendLabels[j].setBounds(x, y, 120, 30); // Adjust the size if necessary
+
+            // Add the label to the panel
+            tilePanel.add(playerLegendLabels[j]);
+        }
 
         // Set frame size and make it visible
         frame.setSize(BOARD_SIZE, BOARD_SIZE);
