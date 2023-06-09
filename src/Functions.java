@@ -1,25 +1,27 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Color;
+import java.awt.Graphics;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
 public class Functions {
 
     // constants
     public static final int NAME_CAP = 10; // Name cap length
-    private static final int TILE_COUNT = 32; // Number of tiles around the board
+    private static final int TILE_COUNT = 32;
     private static final int BOARD_SIZE = 1080; // Board size in pixels
     private static final int OUTER_MARGIN = BOARD_SIZE / 20; // Outer margin size in pixels
     private static final int INNER_MARGIN = BOARD_SIZE / 40; // Inner margin size in pixels
-    private static final String DICE_HOUSE_BACKGROUND_COLOR = "#361521"; // Hex value for dice house minigame
-    private static final String START_BACKGROUND_COLOR = "#4BD183"; // Hex value for start menu color
-    private static final String BACKGROUND_COLOR = "#AD66D9"; // Final value to hold the hex value of color for background
-    private static final Color[] TILE_COLORS = {Color.CYAN, Color.PINK}; // Tile colors (blue and gold)
+    private static final Color[] TILE_COLORS = {Color.BLUE, Color.YELLOW}; // Tile colors (blue and gold)
     private static final int STARTING_MONEY = 600;
     private static final int[] tileValues = new int[TILE_COUNT];
-
 
     private static int[] playerPositions;
     private static String[] playerNames;
@@ -31,12 +33,14 @@ public class Functions {
     private static JLabel[] playerImageLabels;
     private static int numPlayers;
 
+
+    ///
     public static void gameSettings(){
-        Random rn = new Random();
+
         Scanner in = new Scanner(System.in);
-        // TILE VALUES
+// TILE VALUES
         for (int i = 0; i < TILE_COUNT; i++) {
-            tileValues[i] = rn.nextInt(-100, 101); // Random values between -100 and 100
+            tileValues[i] = (int)(Math.random() * 201) - 100; // Random values between -100 and 100
         }
 
         do {
@@ -77,7 +81,7 @@ public class Functions {
 
         JFrame startFrame = new JFrame("Welcome To LPCI Monopoly");
         JPanel startPanel = new JPanel();
-        startPanel.setBackground(Color.decode(START_BACKGROUND_COLOR));
+        startPanel.setBackground(Color.decode("#4bd183"));
 
         startFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         startFrame.setSize(400, 400);
@@ -104,56 +108,66 @@ public class Functions {
         backButton.setBounds(20,10,85, 30);
 
 
-        // button add action listener
-        startButton.addActionListener(e -> {
-            //
-            startPanel.removeAll();  // Remove all components from the panel
-            startPanel.revalidate(); // Revalidate the panel to update the layout
-            startPanel.repaint();    // Repaint the panel to reflect the changes
-            gameBoard();
+        startButton.addActionListener(new ActionListener(){// button add action listener
+            public void actionPerformed(ActionEvent e){
+                //
+                startPanel.removeAll();  // Remove all components from the panel
+                startPanel.revalidate(); // Revalidate the panel to update the layout
+                startPanel.repaint();    // Repaint the panel to reflect the changes
+                gameBoard();
 
 
-            startFrame.dispose();
-            // System.out.print(mode);
+                startFrame.dispose();
+                // System.out.print(mode);
+            }
         });// ends here
 
-        exitButton.addActionListener(e -> {
-            startFrame.dispose(); // if exit button is pressed, exit the entire game
-        });
+        creditsButton.addActionListener(new ActionListener(){// credits button
+            public void actionPerformed(ActionEvent e){
+                //
+                startPanel.removeAll();  // Remove all components from the panel
+                startPanel.revalidate(); // Revalidate the panel to update the layout
+                startPanel.repaint();    // Repaint the panel to reflect the changes
+                JLabel credits = new JLabel("Credits");
+                credits.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size to 20
+                credits.setBounds(150,20,80,20);
+                credits.setOpaque(false);// make background Transparent
+                startPanel.add(credits);
+                ////----
+                JLabel creditNames = new JLabel("Creators:Oliver.S & Efe.B");// game credits
+                creditNames.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size to 20
+                creditNames.setBounds(15,-50,400,300);
+                creditNames.setOpaque(false);// make background Transparent
+                startPanel.add(creditNames);
 
-        // credits button
-        creditsButton.addActionListener(e -> {
-            //
-            startPanel.removeAll();  // Remove all components from the panel
-            startPanel.revalidate(); // Revalidate the panel to update the layout
-            startPanel.repaint();    // Repaint the panel to reflect the changes
-            JLabel credits = new JLabel("Credits");
-            credits.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size to 20
-            credits.setBounds(150,20,80,20);
-            credits.setOpaque(false);// make background Transparent
-            startPanel.add(credits);
-            ////----
-            JLabel creditNames = new JLabel("Creators: Oliver.S & Efe.B");// game credits
-            creditNames.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size to 20
-            creditNames.setBounds(15,-50,400,300);
-            creditNames.setOpaque(false);// make background Transparent
-            startPanel.add(creditNames);
+                JLabel userThank = new JLabel("Thanks for Playing");// thanks for playing message
+                userThank.setFont(new Font("Arial", Font.BOLD, 40)); // Set font size to 40
+                userThank.setBounds(10,20,400,300);
+                userThank.setOpaque(false);// make background Transparent
 
-            JLabel userThank = new JLabel("Thanks for Playing");// thanks for playing message
-            userThank.setFont(new Font("Arial", Font.BOLD, 40)); // Set font size to 40
-            userThank.setBounds(10,20,400,300);
-            userThank.setOpaque(false);// make background Transparent
-
-            startPanel.add(userThank);// add to starting panel
+                startPanel.add(userThank);// add to starting panel
 
 
 
 
-            startPanel.add(backButton);// back to menu button
-            backButton.addActionListener(e1 -> {
-                startFrame.dispose();// removes window
-                IntroMenu();//recall start menu function
-            });
+                startPanel.add(backButton);// back to menu button
+                backButton.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e){
+                        startFrame.dispose();// removes window
+                        IntroMenu();//recall start menu function
+                    }
+                });
+            }
+        });// ends here
+
+
+        exitButton.addActionListener(new ActionListener(){// exit button action listener
+            public void actionPerformed(ActionEvent e){
+                //
+                System.exit(914);// user pressed exit
+
+
+            }
         });// ends here
 
         ImageIcon startImageIcon = new ImageIcon("src/Images/PantherLogo.png"); // Logo Picture
@@ -302,7 +316,7 @@ public class Functions {
 
         for (int j = 0; j < numPlayers; j++) {
             // Player Information Text
-            playerLabels[j] = new JLabel(playerNames[j] + ": $" + playerMoney[j]);
+            playerLabels[j] = new JLabel(playerNames[j] + ": " + playerMoney[j]);
             playerLabels[j].setBounds(220 + 480 * (j % 2), 715 + 110 * (j / 2), 150, 30);
             playerLabels[j].setForeground(Color.BLACK);
             playerLabels[j].setFont(playerNameFont);
@@ -314,35 +328,38 @@ public class Functions {
             rollButtons[j].setFont(tileFont);
             final int currentPlayerIndex = j;
             int finalNumPlayers = numPlayers;
-            rollButtons[j].addActionListener(e -> {
-                if (!hasRolled[currentPlayerIndex]) {
-                    hasRolled[currentPlayerIndex] = true;
-                    rollButtons[currentPlayerIndex].setEnabled(false);
+            rollButtons[j].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (!hasRolled[currentPlayerIndex]) {
+                        hasRolled[currentPlayerIndex] = true;
+                        rollButtons[currentPlayerIndex].setEnabled(false);
 
-                    int diceRoll = Functions.rollDice();
-                    updatePlayerPosition(currentPlayerIndex, diceRoll);
-                    JOptionPane.showMessageDialog(frame,
-                            playerNames[currentPlayerIndex] + " rolled a " + diceRoll + ".");
-                    playerMoney[currentPlayerIndex] += tileValues[playerPositions[currentPlayerIndex]]; // Update player's money
-                    playerLabels[currentPlayerIndex].setText(playerNames[currentPlayerIndex] + ": $" + playerMoney[currentPlayerIndex]); // Update player's money display
+                        int diceRoll = Functions.rollDice();
+                        updatePlayerPosition(currentPlayerIndex, diceRoll);
+                        JOptionPane.showMessageDialog(frame,
+                                playerNames[currentPlayerIndex] + " rolled a " + diceRoll + ".");
+                        playerMoney[currentPlayerIndex] += tileValues[playerPositions[currentPlayerIndex]]; // Update player's money
+                        playerLabels[currentPlayerIndex].setText(playerNames[currentPlayerIndex] + ": $" + playerMoney[currentPlayerIndex]); // Update player's money display
 
-                    currentPlayerLabel.setText("Current Turn: " + playerNames[(currentPlayerIndex + 1) % finalNumPlayers]);
+                        currentPlayerLabel.setText("Current Turn: " + playerNames[(currentPlayerIndex + 1) % finalNumPlayers]);
 
-                    // Check if all players have rolled
-                    boolean allPlayersRolled = true;
-                    for (boolean rolled : hasRolled) {
-                        if (!rolled) {
-                            allPlayersRolled = false;
-                            break;
+                        // Check if all players have rolled
+                        boolean allPlayersRolled = true;
+                        for (boolean rolled : hasRolled) {
+                            if (!rolled) {
+                                allPlayersRolled = false;
+                                break;
+                            }
                         }
-                    }
 
-                    // Enable roll buttons for all players if all have rolled
-                    if (allPlayersRolled) {
-                        for (JButton button : rollButtons) {
-                            button.setEnabled(true);
+                        // Enable roll buttons for all players if all have rolled
+                        if (allPlayersRolled) {
+                            for (JButton button : rollButtons) {
+                                button.setEnabled(true);
+                            }
+                            Arrays.fill(hasRolled, false);
                         }
-                        Arrays.fill(hasRolled, false);
                     }
                 }
             });
@@ -386,7 +403,7 @@ public class Functions {
 
 
         // Set the frame size and visibility
-        tilePanel.setBackground(Color.decode(BACKGROUND_COLOR));// set background color (pastel violet)
+        tilePanel.setBackground(Color.decode("#ad66d9"));// set background color (pastel violet)
         frame.setResizable(false);// Prevent User from changing the window size
         frame.setSize(BOARD_SIZE, BOARD_SIZE);// set board size
         frame.setVisible(true);
@@ -399,7 +416,7 @@ public class Functions {
 
         JFrame diceFrame = new JFrame("Mr.Reeds Dice House");
         JPanel dicePanel = new JPanel();
-        dicePanel.setBackground(Color.decode(START_BACKGROUND_COLOR));
+        dicePanel.setBackground(Color.decode("#361521"));
         diceFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         diceFrame.setSize(400, 400);
         dicePanel.setSize(400,400);
@@ -411,10 +428,69 @@ public class Functions {
         diceName.setFont(new Font("Arial", Font.BOLD, 30)); // Set font size to 20
         diceName.setForeground(Color.white);// set text color white
         diceName.setBounds(40,-70,400,200);// set text location
-
-
         diceName.setOpaque(false);// make background Transparent
         dicePanel.add(diceName);
+
+
+      // create dice
+
+        JButton pDice1 = new JButton();// create first dice
+        pDice1.setBounds(60,100,60,60);
+        pDice1.setBackground(Color.white);
+        pDice1.setEnabled(false);// make unclickable
+
+        JButton pDice2 = new JButton();// create first dice
+        pDice2.setBounds(260,100,60,60);
+        pDice2.setBackground(Color.white);
+        pDice2.setEnabled(false);// make unclickable
+
+        JButton pcDice1 = new JButton();// create first dice
+        pcDice1.setBounds(60,200,60,60);
+        pcDice1.setBackground(Color.white);
+        pcDice1.setEnabled(false);// make un clickable
+
+        JButton pcDice2 = new JButton();// create first dice
+        pcDice2.setBounds(260,200,60,60);
+        pcDice2.setBackground(Color.white);
+        pcDice2.setEnabled(false);// make unclickable
+
+        // add dice to screen
+        dicePanel.add(pDice1);
+        dicePanel.add(pDice2);
+        dicePanel.add(pcDice1);
+        dicePanel.add(pcDice2);
+
+/*
+        // wager system
+        JSlider wagerSlider = new JSlider(JSlider.HORIZONTAL, 0,playerMoney[] , 25);
+        wagerSlider.setLocation(50,30);
+        wagerSlider.setMinorTickSpacing(2);
+        wagerSlider.setMajorTickSpacing(10);
+        wagerSlider.setPaintTicks(true);
+        wagerSlider.setPaintLabels(true);
+
+        dicePanel.add(wagerSlider);
+ */
+        //dicetitles
+        JLabel pDiceTitle = new JLabel("Your Dice:");// Your dice JLabel
+        pDiceTitle.setFont(new Font("Arial", Font.BOLD, 25));
+        pDiceTitle.setForeground(Color.white);// set text color white
+        pDiceTitle.setBounds(130,30,200,100);// set text location
+        pDiceTitle.setOpaque(false);// make background Transparent
+        dicePanel.add(pDiceTitle);
+
+        JLabel pcDiceTitle = new JLabel("Reid's Dice:");// game credits
+        pcDiceTitle.setFont(new Font("Arial", Font.BOLD, 25)); // Set font size to 25
+        pcDiceTitle.setForeground(Color.white);// set text color white
+        pcDiceTitle.setBounds(125,230,200,100);// set text location
+        pcDiceTitle.setOpaque(false);// make background Transparent
+        dicePanel.add(pcDiceTitle);
+
+
+        // roll button
+        JButton rollDiceHouse = new JButton("Roll!");
+        rollDiceHouse.setBounds(150,150,80,40);
+        dicePanel.add(rollDiceHouse);
 
         diceFrame.add(dicePanel);// add the panel into the frame
         diceFrame.setResizable(false);// Prevent User from changing the window size
