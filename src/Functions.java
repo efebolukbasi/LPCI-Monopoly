@@ -7,7 +7,7 @@ import java.util.Random;
 import java.util.Scanner;
 public class Functions {
 
-  // constants
+    // constants
     public static final int NAME_CAP = 10; // Name cap length
     private static final int TILE_COUNT = 32;
     private static final int BOARD_SIZE = 1080; // Board size in pixels
@@ -24,11 +24,8 @@ public class Functions {
     private static int tileSize;
     private static JLabel[] playerImageLabels;
     private static int numPlayers;
-    public static void main(String[] args) {
 
-
-    }
-
+///
     public static void gameSettings(){
 
         Scanner in = new Scanner(System.in);
@@ -65,13 +62,11 @@ public class Functions {
         }
     }
 
-
-
                                                          // intro menu
 
     public static void IntroMenu(){// intro menu screen
-    ////
-    //Add Start Menu//
+
+
     JFrame startFrame = new JFrame("Welcome To LPCI Monopoly");
     JPanel startPanel = new JPanel();
     startPanel.setBackground(Color.decode("#4bd183"));
@@ -394,7 +389,7 @@ public class Functions {
 
 
 
-public static void diceMiniGame(){
+public static void diceMiniGame(){// Mini Game 1, Mr.Reid's Dice House
 
         JFrame diceFrame = new JFrame("Mr.Reeds Dice House");
         JPanel dicePanel = new JPanel();
@@ -421,9 +416,8 @@ public static void diceMiniGame(){
 
     }// end of dice game function
 
-    public static int rollDice() {
+    public static int rollDice() {                                  //Roll Dice
         Random rand = new Random();
-
         return rand.nextInt(1,7);
     }
 
@@ -458,7 +452,7 @@ public static void diceMiniGame(){
         int y = OUTER_MARGIN + INNER_MARGIN + (tileSize - 25 - playerImageLabels[playerIndex].getHeight()) / 2 + newRow * (tileSize + INNER_MARGIN);
 
         playerImageLabels[playerIndex].setLocation(x, y);
-        playerLabels[playerIndex].setText(playerNames[playerIndex] + ": " + "$1200");
+        //playerLabels[playerIndex].setText(playerNames[playerIndex] + ": " + "$1200"); //- may be needed
     }
 
 
