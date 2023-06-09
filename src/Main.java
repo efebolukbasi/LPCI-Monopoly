@@ -3,7 +3,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Scanner;
-import java.util.Random;
 import java.util.Arrays;
 
 public class Main {
@@ -11,7 +10,8 @@ public class Main {
     private static final int BOARD_SIZE = 1080; // Board size in pixels
     private static final int OUTER_MARGIN = BOARD_SIZE / 20; // Outer margin size in pixels
     private static final int INNER_MARGIN = BOARD_SIZE / 40; // Inner margin size in pixels
-    private static final Color[] TILE_COLORS = { Color.BLUE, Color.YELLOW }; // Tile colors (blue and gold)
+    private static final Color[] TILE_COLORS = { Color.cyan, Color.PINK }; // Tile colors (blue and gold)
+    private static final String BACKGROUND_COLOR = "#AD66D9"; // Background color of entire screen
     private static final int NAME_CAP = 10; // Name cap length
 
     private static int[] playerPositions;
@@ -20,6 +20,8 @@ public class Main {
     private static JButton[] rollButtons;
     private static boolean[] hasRolled;
     private static JLabel currentPlayerLabel;
+    private static int tileSize;
+    private static JLabel[] playerImageLabels;
 
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
@@ -63,7 +65,7 @@ public class Main {
         // Create the tile panel
         JPanel tilePanel = new JPanel();
         tilePanel.setLayout(null); // Use absolute layout
-        tilePanel.setBackground(Color.decode("#AD66D9"));
+        tilePanel.setBackground(Color.decode(BACKGROUND_COLOR));
         tilePanel.setBounds(0, 0, BOARD_SIZE, BOARD_SIZE);
         frame.add(tilePanel);
 
@@ -84,23 +86,21 @@ public class Main {
 
         // Create the tiles
         JButton[] tiles = new JButton[TILE_COUNT];
-        int tileSize = (BOARD_SIZE - 2 * OUTER_MARGIN - 8 * INNER_MARGIN) / 9;
+        tileSize = (BOARD_SIZE - 2 * OUTER_MARGIN - 8 * INNER_MARGIN) / 9;
         int row = 0;
         int col = 0;
         int colorIndex = 0; // Index for tile colors
         int i = 0;
         while (i < TILE_COUNT) {
-            if (row == 0 || row == 8 || col == 0 || col == 8) {
-                tiles[i] = new JButton(String.valueOf(i + 1));
-                tiles[i].setBounds(OUTER_MARGIN + col * (tileSize + INNER_MARGIN),
-                        OUTER_MARGIN + row * (tileSize + INNER_MARGIN), tileSize, tileSize);
-                tiles[i].setHorizontalAlignment(SwingConstants.RIGHT); // Set number alignment to right
-                tiles[i].setVerticalAlignment(SwingConstants.TOP); // Set number alignment to top
-                tiles[i].setEnabled(false); // Disable the tile button
-                tiles[i].setBackground(TILE_COLORS[colorIndex]); // Set tile color
-                tilePanel.add(tiles[i]);
-                i++;
-            }
+            tiles[i] = new JButton(String.valueOf(i + 1));
+            tiles[i].setBounds(OUTER_MARGIN + col * (tileSize + INNER_MARGIN),
+                    OUTER_MARGIN + row * (tileSize + INNER_MARGIN), tileSize, tileSize);
+            tiles[i].setHorizontalAlignment(SwingConstants.RIGHT); // Set number alignment to right
+            tiles[i].setVerticalAlignment(SwingConstants.TOP); // Set number alignment to top
+            tiles[i].setEnabled(false); // Disable the tile button
+            tiles[i].setBackground(TILE_COLORS[colorIndex]); // Set tile color
+            tilePanel.add(tiles[i]);
+            i++;
             if (col < 8 && row == 0) {
                 col++;
             } else if (row < 8 && col == 8) {
@@ -112,14 +112,40 @@ public class Main {
             }
             colorIndex = (colorIndex + 1) % TILE_COLORS.length; // Update tile color index
         }
+        // Player Logo's
+        ImageIcon[] playerIcons = {
+                new ImageIcon("src/Images/p1.png"),
+                new ImageIcon("src/Images/p2.png"),
+                new ImageIcon("src/Images/p3.png"),
+                new ImageIcon("src/Images/p4.png")
+        };
+
+        // Create JLabels for each player and display at tile number 1 with a border
+        playerImageLabels = new JLabel[numPlayers];
+        for (int j = 0; j < numPlayers; j++) {
+            Image scaledImage = playerIcons[j].getImage().getScaledInstance(tileSize - 25, tileSize - 25, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+            playerImageLabels[j] = new JLabel(scaledIcon);
+            playerImageLabels[j].setSize(tileSize - 25, tileSize - 25);
+
+            int x = OUTER_MARGIN + INNER_MARGIN + (tileSize - 50 - playerImageLabels[j].getWidth()) / 2; // Calculate x-coordinate
+            int y = OUTER_MARGIN + INNER_MARGIN + (tileSize - 50 - playerImageLabels[j].getHeight()) / 2; // Calculate y-coordinate
+
+            playerImageLabels[j].setLocation(x, y);
+            tilePanel.add(playerImageLabels[j], 0);
+        }
 
         // Player info
+        String[] playerMoney = { "$1200", "$1200", "$1200", "$1200" };
+
+        // POSITIONS
         playerPositions = new int[numPlayers];
         Arrays.fill(playerPositions, 0);
         playerLabels = new JLabel[numPlayers];
         rollButtons = new JButton[numPlayers];
         hasRolled = new boolean[numPlayers];
-        String[] playerMoney = { "$1200", "$1200", "$1200", "$1200" };
+
+        //FONTS FOR TEXT
         Font playerNameFont = new Font("SansSerif", Font.BOLD, 16);
         Font tileFont = new Font("SansSerif", Font.BOLD, 13);
 
@@ -181,13 +207,44 @@ public class Main {
         currentPlayerLabel.setFont(playerNameFont);
         tilePanel.add(currentPlayerLabel);
 
+        // Legen
+
         // Set frame size and make it visible
         frame.setSize(BOARD_SIZE, BOARD_SIZE);
         frame.setVisible(true);
+        frame.setResizable(false);
     }
 
     private static void updatePlayerPosition(int playerIndex, int diceRoll) {
-        playerPositions[playerIndex] = (playerPositions[playerIndex] + diceRoll) % TILE_COUNT;
+        int currentPlayerPosition = playerPositions[playerIndex];
+        int newPlayerPosition = (currentPlayerPosition + diceRoll) % TILE_COUNT;
+        playerPositions[playerIndex] = newPlayerPosition;
+
+        // Calculate new row and column
+        int newRow, newCol;
+        if (newPlayerPosition < 9) {
+            // Top row, moving right
+            newRow = 0;
+            newCol = newPlayerPosition;
+        } else if (newPlayerPosition < 17) {
+            // Right column, moving down
+            newRow = newPlayerPosition - 8;
+            newCol = 8;
+        } else if (newPlayerPosition < 25) {
+            // Bottom row, moving left
+            newRow = 8;
+            newCol = 24 - newPlayerPosition;
+        } else {
+            // Left column, moving up
+            newRow = 32 - newPlayerPosition;
+            newCol = 0;
+        }
+
+        // Calculate the new location of the player's image label
+        int x = OUTER_MARGIN + INNER_MARGIN + (tileSize - 25 - playerImageLabels[playerIndex].getWidth()) / 2 + newCol * (tileSize + INNER_MARGIN);
+        int y = OUTER_MARGIN + INNER_MARGIN + (tileSize - 25 - playerImageLabels[playerIndex].getHeight()) / 2 + newRow * (tileSize + INNER_MARGIN);
+
+        playerImageLabels[playerIndex].setLocation(x, y);
         playerLabels[playerIndex].setText(playerNames[playerIndex] + ": " + "$1200");
     }
 }
