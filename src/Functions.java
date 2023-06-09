@@ -15,9 +15,12 @@ public class Functions {
     private static final int BOARD_SIZE = 1080; // Board size in pixels
     private static final int OUTER_MARGIN = BOARD_SIZE / 20; // Outer margin size in pixels
     private static final int INNER_MARGIN = BOARD_SIZE / 40; // Inner margin size in pixels
-    private static final Color[] TILE_COLORS = {Color.BLUE, Color.YELLOW}; // Tile colors (blue and gold)
+    private static final Color[] TILE_COLORS = {Color.CYAN, Color.PINK}; // Tile colors (blue and gold)
     private static final int STARTING_MONEY = 600;
     private static final int[] tileValues = new int[TILE_COUNT];
+    private static final String DICE_HOUSE_BACKGROUND_COLOR = "#361521"; // Hex value for dice house minigame
+    private static final String START_BACKGROUND_COLOR = "#4BD183"; // Hex value for start menu color
+    private static final String BACKGROUND_COLOR = "#AD66D9"; // Final value to hold the hex value of color for background
 
     private static int[] playerPositions;
     private static String[] playerNames;
@@ -29,15 +32,13 @@ public class Functions {
     private static JLabel[] playerImageLabels;
     private static int numPlayers;
 
-
-///
     public static void gameSettings(){
-
+        Random rn = new Random();
         Scanner in = new Scanner(System.in);
-// TILE VALUES
- for (int i = 0; i < TILE_COUNT; i++) {
-     tileValues[i] = (int)(Math.random() * 201) - 100; // Random values between -100 and 100
-          }
+        // TILE VALUES
+        for (int i = 0; i < TILE_COUNT; i++) {
+            tileValues[i] = rn.nextInt(-100, 101); // Random values between -100 and 100
+        }
 
         do {
             System.out.print("How many players: ");
@@ -70,123 +71,123 @@ public class Functions {
         }
     }
 
-                                                         // intro menu
+    // intro menu
 
     public static void IntroMenu(){// intro menu screen
 
 
-    JFrame startFrame = new JFrame("Welcome To LPCI Monopoly");
-    JPanel startPanel = new JPanel();
-    startPanel.setBackground(Color.decode("#4bd183"));
+        JFrame startFrame = new JFrame("Welcome To LPCI Monopoly");
+        JPanel startPanel = new JPanel();
+        startPanel.setBackground(Color.decode(START_BACKGROUND_COLOR));
 
-    startFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    startFrame.setSize(400, 400);
-    startPanel.setSize(400,400);
-    startPanel.setLayout(null);
+        startFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        startFrame.setSize(400, 400);
+        startPanel.setSize(400,400);
+        startPanel.setLayout(null);
 
-    JButton startButton = new JButton("Start");
+        JButton startButton = new JButton("Start");
 
-    startButton.setBounds(20,10,85, 30);
+        startButton.setBounds(20,10,85, 30);
 
-    //startButton1.setLocation(0,100);
+        //startButton1.setLocation(0,100);
 
 
-    JButton exitButton = new JButton("Exit");//exit game button
+        JButton exitButton = new JButton("Exit");//exit game button
 
-    exitButton.setBounds(280,10,85, 30);
+        exitButton.setBounds(280,10,85, 30);
 
-    JButton creditsButton = new JButton("Credits");// credits button
+        JButton creditsButton = new JButton("Credits");// credits button
 
-    creditsButton.setBounds(150,10,85, 30);
+        creditsButton.setBounds(150,10,85, 30);
 
         JButton backButton = new JButton("Back");// back button from credits
 
         backButton.setBounds(20,10,85, 30);
 
 
-    startButton.addActionListener(new ActionListener(){// button add action listener
-        public void actionPerformed(ActionEvent e){
-            //
-            startPanel.removeAll();  // Remove all components from the panel
-            startPanel.revalidate(); // Revalidate the panel to update the layout
-            startPanel.repaint();    // Repaint the panel to reflect the changes
-           gameBoard();
+        startButton.addActionListener(new ActionListener(){// button add action listener
+            public void actionPerformed(ActionEvent e){
+                //
+                startPanel.removeAll();  // Remove all components from the panel
+                startPanel.revalidate(); // Revalidate the panel to update the layout
+                startPanel.repaint();    // Repaint the panel to reflect the changes
+                gameBoard();
 
 
-            startFrame.dispose();
-            // System.out.print(mode);
-        }
-    });// ends here
+                startFrame.dispose();
+                // System.out.print(mode);
+            }
+        });// ends here
 
-    creditsButton.addActionListener(new ActionListener(){// credits button
-        public void actionPerformed(ActionEvent e){
-            //
-            startPanel.removeAll();  // Remove all components from the panel
-            startPanel.revalidate(); // Revalidate the panel to update the layout
-            startPanel.repaint();    // Repaint the panel to reflect the changes
-            JLabel credits = new JLabel("Credits");
-            credits.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size to 20
-            credits.setBounds(150,20,80,20);
-            credits.setOpaque(false);// make background Transparent
-            startPanel.add(credits);
-            ////----
-            JLabel creditNames = new JLabel("Creators:Oliver.S & Efe.B");// game credits
-            creditNames.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size to 20
-            creditNames.setBounds(15,-50,400,300);
-            creditNames.setOpaque(false);// make background Transparent
-            startPanel.add(creditNames);
+        creditsButton.addActionListener(new ActionListener(){// credits button
+            public void actionPerformed(ActionEvent e){
+                //
+                startPanel.removeAll();  // Remove all components from the panel
+                startPanel.revalidate(); // Revalidate the panel to update the layout
+                startPanel.repaint();    // Repaint the panel to reflect the changes
+                JLabel credits = new JLabel("Credits");
+                credits.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size to 20
+                credits.setBounds(150,20,80,20);
+                credits.setOpaque(false);// make background Transparent
+                startPanel.add(credits);
+                ////----
+                JLabel creditNames = new JLabel("Creators: Oliver.S & Efe.B");// game credits
+                creditNames.setFont(new Font("Arial", Font.BOLD, 20)); // Set font size to 20
+                creditNames.setBounds(15,-50,400,300);
+                creditNames.setOpaque(false);// make background Transparent
+                startPanel.add(creditNames);
 
-            JLabel userThank = new JLabel("Thanks for Playing");// thanks for playing message
-            userThank.setFont(new Font("Arial", Font.BOLD, 40)); // Set font size to 40
-            userThank.setBounds(10,20,400,300);
-            userThank.setOpaque(false);// make background Transparent
+                JLabel userThank = new JLabel("Thanks for Playing");// thanks for playing message
+                userThank.setFont(new Font("Arial", Font.BOLD, 40)); // Set font size to 40
+                userThank.setBounds(10,20,400,300);
+                userThank.setOpaque(false);// make background Transparent
 
-            startPanel.add(userThank);// add to starting panel
-
-
-
-
-            startPanel.add(backButton);// back to menu button
-            backButton.addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent e){
-                    startFrame.dispose();// removes window
-                    IntroMenu();//recall start menu function
-                }
-            });
-        }
-    });// ends here
-
-
-    exitButton.addActionListener(new ActionListener(){// exit button action listener
-        public void actionPerformed(ActionEvent e){
-            //
-            System.exit(914);// user pressed exit
-
-
-        }
-    });// ends here
-
-    ImageIcon startImageIcon = new ImageIcon("src/Images/PantherLogo.png"); // Logo Picture
-    JLabel startImageLabel = new JLabel(startImageIcon);// assign ImageIcon to a JLabel, to be able to paste to screen.
-
-    startImageLabel.setBounds(0,30,403,331);
+                startPanel.add(userThank);// add to starting panel
 
 
 
-    startFrame.add(startPanel);// add the panel into the frame
 
-    startPanel.add(startButton);
-    startPanel.add(creditsButton);
-    startPanel.add(exitButton);
-    startPanel.add(startImageLabel);
-    //frame settings
-    startFrame.setResizable(false);// Prevent User from changing the window size
-    startFrame.setVisible(true);
+                startPanel.add(backButton);// back to menu button
+                backButton.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e){
+                        startFrame.dispose();// removes window
+                        IntroMenu();//recall start menu function
+                    }
+                });
+            }
+        });// ends here
 
 
-}
+        exitButton.addActionListener(new ActionListener(){// exit button action listener
+            public void actionPerformed(ActionEvent e){
+                //
+                System.exit(914);// user pressed exit
 
-                                                // main game
+
+            }
+        });// ends here
+
+        ImageIcon startImageIcon = new ImageIcon("src/Images/PantherLogo.png"); // Logo Picture
+        JLabel startImageLabel = new JLabel(startImageIcon);// assign ImageIcon to a JLabel, to be able to paste to screen.
+
+        startImageLabel.setBounds(0,30,403,331);
+
+
+
+        startFrame.add(startPanel);// add the panel into the frame
+
+        startPanel.add(startButton);
+        startPanel.add(creditsButton);
+        startPanel.add(exitButton);
+        startPanel.add(startImageLabel);
+        //frame settings
+        startFrame.setResizable(false);// Prevent User from changing the window size
+        startFrame.setVisible(true);
+
+
+    }
+
+    // main game
 
 
     public static void gameBoard(){
@@ -240,11 +241,11 @@ public class Functions {
                 tilePanel.add(tiles[i]);
 
                 // CODE TO CLICK TILES TO SEE VALUES OF TILES - optional
-                 final int tileIndex = i;  // Necessary to allow the mouse listener to reference the tile's index
-                 tiles[i].addMouseListener(new MouseAdapter() {
-                 public void mouseClicked(MouseEvent e) {
-                 JOptionPane.showMessageDialog(null, "Tile " + (tileIndex + 1) + " value: " + tileValues[tileIndex]);
-                 }});             // END OF CODE TO CLICK TILES TO SEE VALUES OF TILES
+                final int tileIndex = i;  // Necessary to allow the mouse listener to reference the tile's index
+                tiles[i].addMouseListener(new MouseAdapter() {
+                    public void mouseClicked(MouseEvent e) {
+                        JOptionPane.showMessageDialog(null, "Tile " + (tileIndex + 1) + " value: " + tileValues[tileIndex]);
+                    }});             // END OF CODE TO CLICK TILES TO SEE VALUES OF TILES
 
                 i++;
             }
@@ -312,7 +313,7 @@ public class Functions {
 
         for (int j = 0; j < numPlayers; j++) {
             // Player Information Text
-            playerLabels[j] = new JLabel(playerNames[j] + ": " + playerMoney[j]);
+            playerLabels[j] = new JLabel(playerNames[j] + ": $" + playerMoney[j]);
             playerLabels[j].setBounds(220 + 480 * (j % 2), 715 + 110 * (j / 2), 150, 30);
             playerLabels[j].setForeground(Color.BLACK);
             playerLabels[j].setFont(playerNameFont);
@@ -399,7 +400,7 @@ public class Functions {
 
 
         // Set the frame size and visibility
-        tilePanel.setBackground(Color.decode("#ad66d9"));// set background color (pastel violet)
+        tilePanel.setBackground(Color.decode(BACKGROUND_COLOR));// set background color (pastel violet)
         frame.setResizable(false);// Prevent User from changing the window size
         frame.setSize(BOARD_SIZE, BOARD_SIZE);// set board size
         frame.setVisible(true);
@@ -408,30 +409,30 @@ public class Functions {
 
 
 
-public static void diceMiniGame(){// Mini Game 1, Mr.Reid's Dice House
+    public static void diceMiniGame(){// Mini Game 1, Mr.Reid's Dice House
 
         JFrame diceFrame = new JFrame("Mr.Reeds Dice House");
         JPanel dicePanel = new JPanel();
-        dicePanel.setBackground(Color.decode("#361521"));
-    diceFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    diceFrame.setSize(400, 400);
-    dicePanel.setSize(400,400);
-    dicePanel.setLayout(null);
+        dicePanel.setBackground(Color.decode(START_BACKGROUND_COLOR));
+        diceFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        diceFrame.setSize(400, 400);
+        dicePanel.setSize(400,400);
+        dicePanel.setLayout(null);
 
 
 // mini game title
-    JLabel diceName = new JLabel("Mr.Reid's Dice House");// game credits
-    diceName.setFont(new Font("Arial", Font.BOLD, 30)); // Set font size to 20
-    diceName.setForeground(Color.white);// set text color white
-    diceName.setBounds(40,-70,400,200);// set text location
+        JLabel diceName = new JLabel("Mr.Reid's Dice House");// game credits
+        diceName.setFont(new Font("Arial", Font.BOLD, 30)); // Set font size to 20
+        diceName.setForeground(Color.white);// set text color white
+        diceName.setBounds(40,-70,400,200);// set text location
 
 
-    diceName.setOpaque(false);// make background Transparent
-    dicePanel.add(diceName);
+        diceName.setOpaque(false);// make background Transparent
+        dicePanel.add(diceName);
 
-    diceFrame.add(dicePanel);// add the panel into the frame
-    diceFrame.setResizable(false);// Prevent User from changing the window size
-    diceFrame.setVisible(true);
+        diceFrame.add(dicePanel);// add the panel into the frame
+        diceFrame.setResizable(false);// Prevent User from changing the window size
+        diceFrame.setVisible(true);
 
     }// end of dice game function
 
@@ -473,7 +474,5 @@ public static void diceMiniGame(){// Mini Game 1, Mr.Reid's Dice House
         playerImageLabels[playerIndex].setLocation(x, y);
         //playerLabels[playerIndex].setText(playerNames[playerIndex] + ": " + "$1200"); //- may be needed
     }
-
-
 
 }// end of Functions class
