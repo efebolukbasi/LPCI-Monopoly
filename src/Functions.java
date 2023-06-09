@@ -9,81 +9,65 @@ import javax.swing.text.*;
 public class Functions {
 
   // constants
+
+
+
+    public static final int NAME_CAP = 10; // Name cap length
     private static final int TILE_COUNT = 32;
     private static final int BOARD_SIZE = 1080; // Board size in pixels
     private static final int OUTER_MARGIN = BOARD_SIZE / 20; // Outer margin size in pixels
     private static final int INNER_MARGIN = BOARD_SIZE / 40; // Inner margin size in pixels
     private static final Color[] TILE_COLORS = {Color.BLUE, Color.YELLOW}; // Tile colors (blue and gold)
 
-    public static int userTurn = 1;
-    public static boolean extraPlayers;
-
+    private static int[] playerPositions;
+    private static String[] playerNames;
+    private static JLabel[] playerLabels;
+    private static JButton[] rollButtons;
+    private static boolean[] hasRolled;
+    private static JLabel currentPlayerLabel;
+    private static int tileSize;
+    private static JLabel[] playerImageLabels;
+    private static int numPlayers;
     public static void main(String[] args) {
 
 
     }
-    public static String[] generateRandomDeck(int numCards) {
-        String[] deck = new String[numCards];
-        String[] suits = {"Spades", "Hearts", "Diamonds", "Clubs"};
-         String[] ranks = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King","Ace"};
 
-        Random rand = new Random();
-
-        for (int i = 0; i < numCards; i++) {
-            int suitIndex = rand.nextInt(suits.length);
-            int rankIndex = rand.nextInt(ranks.length);
-            deck[i] = ranks[rankIndex] + " of " + suits[suitIndex];
-        }
-
-        return deck;
-    }
-    public static void updateTurnLabel(JLabel label, int turn) {
-        if (turn == 1) {
-            label.setText("Turn: User 1");
-        }else if(turn ==2) {
-            label.setText("Turn: User 2");
-        } else if (extraPlayers && turn==3) {
-            label.setText("Turn: User 3");
-        } else if (extraPlayers && turn ==4) {
-            label.setText("Turn: User 4");
-        }
-    }
-/*
-    public static void blz_exit(){
-        Scanner in = new Scanner(System.in);
-        String exit;
-        do {
-            System.out.print("Play Again (y/n): ");
-            exit = in.next().toLowerCase();
-        }while (!exit.equals("n") && !exit.equals("y"));
-        if(exit.equals("n")) {
-            System.out.println("Game Over");
-            System.exit(0);
-
-
-        }
-    }
-
-    public static int[] blz_intro() {// before the game starts (user enters their game parameters)
+    public static void gameSettings(){
 
         Scanner in = new Scanner(System.in);
-        int[] numPlayers;
+
+
         do {
-            System.out.print("\n\nHow many players(2,4): ");// an array of how many players we have
-            numPlayers = new int[in.nextInt()];
+            System.out.print("How many players: ");
+            numPlayers = in.nextInt();
+        } while (numPlayers < 2 || numPlayers > 4);
 
-        } while (numPlayers.length ==3 || (numPlayers.length <= 1 || numPlayers.length >= 5)); // only even numbers
+        in.nextLine(); // Consume the newline character
 
-        if(numPlayers.length >3) extraPlayers = true;
+        playerNames = new String[numPlayers];
 
-        int[] blz_PlayerCoins = new int[numPlayers.length]; // an array that stores the amount of coins users have
+        for (int i = 0; i < numPlayers; i++) {
+            String playerName;
+            boolean validName;
 
-        // giving each player 8 coins to start
-        Arrays.fill(blz_PlayerCoins, 8);
-        // System.out.print(Arrays.toString(blz_PlayerCoins));
-        return numPlayers;
+            do {
+                System.out.print("Enter name for Player " + (i + 1) + ": ");
+                playerName = in.nextLine();
+
+                validName = true;
+                for (int j = 0; j < i; j++) {
+                    if (playerName.equalsIgnoreCase(playerNames[j])) {
+                        validName = false;
+                        System.out.println("Name already taken. Please enter a different name.");
+                        break;
+                    }
+                }
+            } while (!validName || playerName.length() > Functions.NAME_CAP);
+
+            playerNames[i] = playerName;
+        }
     }
-*/
 
 
 
@@ -240,7 +224,7 @@ public class Functions {
 
         // Create the tiles
         JButton[] tiles = new JButton[TILE_COUNT];
-        int tileSize = (BOARD_SIZE - 2 * OUTER_MARGIN - 8 * INNER_MARGIN) / 9;
+        tileSize = (BOARD_SIZE - 2 * OUTER_MARGIN - 8 * INNER_MARGIN) / 9;
         int row = 0;
         int col = 0;
         int colorIndex = 0; // Index for tile colors
@@ -277,23 +261,128 @@ public class Functions {
         tiles[TILE_COUNT - 1].setEnabled(false); // Disable the additional tile button
         tiles[TILE_COUNT - 1].setBackground(TILE_COLORS[colorIndex]); // Set tile color
         tilePanel.add(tiles[TILE_COUNT - 1]);
+////
 
 
-        //Game Top Bar Menu//
-        JFrame MenuFrame = new JFrame("Game Menu");
-        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //  frame.setSize(400, 300);
+        // Player Logo's
+        ImageIcon[] playerIcons = {
+                new ImageIcon("src/Images/p1.png"),
+                new ImageIcon("src/Images/p2.png"),
+                new ImageIcon("src/Images/p3.png"),
+                new ImageIcon("src/Images/p4.png")
+        };
 
-        JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("GameInfo");
+        // Create JLabels for each player and display at tile number 1 with a border
+        playerImageLabels = new JLabel[numPlayers];
+        for (int j = 0; j < numPlayers; j++) {
+            Image scaledImage = playerIcons[j].getImage().getScaledInstance(tileSize - 25, tileSize - 25, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+            playerImageLabels[j] = new JLabel(scaledIcon);
+            playerImageLabels[j].setSize(tileSize - 25, tileSize - 25);
 
-        JMenuItem menuItem1 = new JMenuItem("Credits");
-        JMenuItem menuItem2 = new JMenuItem("Don't Click");
-        menu.add(menuItem1);
-        menu.add(menuItem2);
+            int x = OUTER_MARGIN + INNER_MARGIN + (tileSize - 50 - playerImageLabels[j].getWidth()) / 2; // Calculate x-coordinate
+            int y = OUTER_MARGIN + INNER_MARGIN + (tileSize - 50 - playerImageLabels[j].getHeight()) / 2; // Calculate y-coordinate
 
-        menuBar.add(menu);
-        frame.setJMenuBar(menuBar);
+            playerImageLabels[j].setLocation(x, y);
+            tilePanel.add(playerImageLabels[j], 0);
+        }
+
+        // Player info
+        String[] playerMoney = { "$1200", "$1200", "$1200", "$1200" };
+
+        // POSITIONS
+        playerPositions = new int[numPlayers];
+        Arrays.fill(playerPositions, 0);
+        playerLabels = new JLabel[numPlayers];
+        rollButtons = new JButton[numPlayers];
+        hasRolled = new boolean[numPlayers];
+
+        //FONTS FOR TEXT
+        Font playerNameFont = new Font("SansSerif", Font.BOLD, 16);
+        Font tileFont = new Font("SansSerif", Font.BOLD, 13);
+
+        for (int j = 0; j < numPlayers; j++) {
+            // Player Information Text
+            playerLabels[j] = new JLabel(playerNames[j] + ": " + playerMoney[j]);
+            playerLabels[j].setBounds(220 + 480 * (j % 2), 715 + 110 * (j / 2), 150, 30);
+            playerLabels[j].setForeground(Color.BLACK);
+            playerLabels[j].setFont(playerNameFont);
+            tilePanel.add(playerLabels[j]);
+
+            // Roll Button
+            rollButtons[j] = new JButton("Roll");
+            rollButtons[j].setBounds(220 + 480 * (j % 2), 755 + 110 * (j / 2), 80, 30);
+            rollButtons[j].setFont(tileFont);
+            final int currentPlayerIndex = j;
+            int finalNumPlayers = numPlayers;
+            rollButtons[j].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (!hasRolled[currentPlayerIndex]) {
+                        hasRolled[currentPlayerIndex] = true;
+                        rollButtons[currentPlayerIndex].setEnabled(false);
+
+                        int diceRoll = rollDice();
+                        updatePlayerPosition(currentPlayerIndex, diceRoll);
+                        JOptionPane.showMessageDialog(frame,
+                                playerNames[currentPlayerIndex] + " rolled a " + diceRoll + ".");
+
+                        currentPlayerLabel.setText("Current Turn: " + playerNames[(currentPlayerIndex + 1)
+                                % finalNumPlayers]);
+
+                        // Check if all players have rolled
+                        boolean allPlayersRolled = true;
+                        for (boolean rolled : hasRolled) {
+                            if (!rolled) {
+                                allPlayersRolled = false;
+                                break;
+                            }
+                        }
+
+                        // Enable roll buttons for all players if all have rolled
+                        if (allPlayersRolled) {
+                            for (JButton button : rollButtons) {
+                                button.setEnabled(true);
+                            }
+                            Arrays.fill(hasRolled, false);
+                        }
+                    }
+                }
+            });
+            tilePanel.add(rollButtons[j]);
+        }
+
+        // Current Player Label
+        currentPlayerLabel = new JLabel("Current Turn: " + playerNames[0]);
+        currentPlayerLabel.setBounds(450, 715, 200, 30);
+        currentPlayerLabel.setForeground(Color.BLACK);
+        currentPlayerLabel.setFont(playerNameFont);
+        tilePanel.add(currentPlayerLabel);
+
+        // Legend
+        JLabel[] playerLegendLabels = new JLabel[numPlayers];
+        for (int j = 0; j < numPlayers; j++) {
+            // Scale and set the logo
+            Image scaledImage = playerIcons[j].getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+            // Create a new label with the player's name and their logo
+            playerLegendLabels[j] = new JLabel(scaledIcon);
+            playerLegendLabels[j].setText(" = " + playerNames[j]);
+            playerLegendLabels[j].setFont(new Font("SansSerif", Font.BOLD, 15));
+
+            // Set the location of the label
+            int x = 450; // Match this with the x-coordinate of the CurrentTurn label - could set to variable if wanted to move them together
+            int y = 775 + j * 30; // Starts below the CurrentTurn label, adjust as needed
+
+            playerLegendLabels[j].setBounds(x, y, 120, 30); // Adjust the size if necessary
+
+            // Add the label to the panel
+            tilePanel.add(playerLegendLabels[j]);
+        }
+
+
+
 
 
         ///
@@ -304,7 +393,10 @@ public class Functions {
         frame.setResizable(false);// Prevent User from changing the window size
         frame.setSize(BOARD_SIZE, BOARD_SIZE);// set board size
         frame.setVisible(true);
-    }
+    }// end of board game function
+
+
+
 
 public static void diceMiniGame(){
 
@@ -320,26 +412,59 @@ public static void diceMiniGame(){
 // mini game title
     JLabel diceName = new JLabel("Mr.Reid's Dice House");// game credits
     diceName.setFont(new Font("Arial", Font.BOLD, 30)); // Set font size to 20
-    diceName.setForeground(Color.white);
-    diceName.setBounds(40,-70,400,200);
+    diceName.setForeground(Color.white);// set text color white
+    diceName.setBounds(40,-70,400,200);// set text location
 
 
     diceName.setOpaque(false);// make background Transparent
     dicePanel.add(diceName);
 
-JLabel pDice1 = new JLabel();
-    JLabel pDice2 = new JLabel();
-    JLabel pcDice1 = new JLabel();
-    JLabel pcDice2 = new JLabel();
-
-
-
     diceFrame.add(dicePanel);// add the panel into the frame
     diceFrame.setResizable(false);// Prevent User from changing the window size
     diceFrame.setVisible(true);
 
+    }// end of dice game function
+
+    public static int rollDice() {
+        Random rand = new Random();
+
+        return rand.nextInt(1,7);
+    }
+
+
+    private static void updatePlayerPosition(int playerIndex, int diceRoll) {
+        int currentPlayerPosition = playerPositions[playerIndex];
+        int newPlayerPosition = (currentPlayerPosition + diceRoll) % TILE_COUNT;
+        playerPositions[playerIndex] = newPlayerPosition;
+
+        // Calculate new row and column
+        int newRow, newCol;
+        if (newPlayerPosition < 9) {
+            // Top row, moving right
+            newRow = 0;
+            newCol = newPlayerPosition;
+        } else if (newPlayerPosition < 17) {
+            // Right column, moving down
+            newRow = newPlayerPosition - 8;
+            newCol = 8;
+        } else if (newPlayerPosition < 25) {
+            // Bottom row, moving left
+            newRow = 8;
+            newCol = 24 - newPlayerPosition;
+        } else {
+            // Left column, moving up
+            newRow = 32 - newPlayerPosition;
+            newCol = 0;
+        }
+
+        // Calculate the new location of the player's image label
+        int x = OUTER_MARGIN + INNER_MARGIN + (tileSize - 25 - playerImageLabels[playerIndex].getWidth()) / 2 + newCol * (tileSize + INNER_MARGIN);
+        int y = OUTER_MARGIN + INNER_MARGIN + (tileSize - 25 - playerImageLabels[playerIndex].getHeight()) / 2 + newRow * (tileSize + INNER_MARGIN);
+
+        playerImageLabels[playerIndex].setLocation(x, y);
+        playerLabels[playerIndex].setText(playerNames[playerIndex] + ": " + "$1200");
     }
 
 
 
-}// end of class
+}// end of Functions class
