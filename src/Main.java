@@ -1,6 +1,12 @@
 public class Main {
     public static void main(String[] args) {
-        Functions.gameSettings();
-        //Functions.diceMiniGame();
-        Functions.IntroMenu();// call menu function
-    }}
+
+        Functions.IntroMenu();
+        while (true) {
+            if ( Functions.gameOver ) {
+                Functions.showGameOverPopup();
+                break;
+            }
+        }
+    }
+}
