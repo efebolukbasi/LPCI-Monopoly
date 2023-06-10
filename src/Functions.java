@@ -11,9 +11,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JSlider;
 public class Functions {
 
     // constants
+    static final Random rand = new Random();
     public static final int NAME_CAP = 10; // Name cap length
     private static final int TILE_COUNT = 32;
     private static final int BOARD_SIZE = 1080; // Board size in pixels
@@ -36,7 +38,7 @@ public class Functions {
 
     ///
     public static void gameSettings(){
-
+        Random random = new Random();
         Scanner in = new Scanner(System.in);
 // TILE VALUES
         for (int i = 0; i < TILE_COUNT; i++) {
@@ -194,6 +196,7 @@ public class Functions {
 
 
     public static void gameBoard(){
+        Random random = new Random();
         // Create the main frame
         JFrame frame = new JFrame("Monopoly Board");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -326,7 +329,7 @@ public class Functions {
             rollButtons[j] = new JButton("Roll");
             rollButtons[j].setBounds(220 + 480 * (j % 2), 755 + 110 * (j / 2), 80, 30);
             rollButtons[j].setFont(tileFont);
-            final int currentPlayerIndex = j;
+             int currentPlayerIndex = j;
             int finalNumPlayers = numPlayers;
             rollButtons[j].addActionListener(new ActionListener() {
                 @Override
@@ -364,7 +367,18 @@ public class Functions {
                 }
             });
             tilePanel.add(rollButtons[j]);
+
+        //playerMoney[currentPlayerIndex] += tileValues[playerPositions[currentPlayerIndex]];
+
+            if(playerPositions[currentPlayerIndex] == tileValues[13] ){// add tile position
+                playerMoney[currentPlayerIndex] += diceMiniGame(currentPlayerIndex);
+            }
+
+
         }
+
+
+
 
         // Current Player Label
         currentPlayerLabel = new JLabel("Current Turn: " + playerNames[0]);
@@ -410,9 +424,16 @@ public class Functions {
     }// end of board game function
 
 
+    public static int wager;
 
+    public static double diceMiniGame(int playerTurn){// Mini Game 1, Mr.Reid's Dice House
 
-    public static void diceMiniGame(){// Mini Game 1, Mr.Reid's Dice House
+       // public static int wager;
+        do {
+            String input = JOptionPane.showInputDialog("Enter Wager Amount: ");
+             wager = Integer.parseInt(input);
+        } while (wager <0  );
+
 
         JFrame diceFrame = new JFrame("Mr.Reeds Dice House");
         JPanel dicePanel = new JPanel();
@@ -439,39 +460,29 @@ public class Functions {
         pDice1.setBackground(Color.white);
         pDice1.setEnabled(false);// make unclickable
 
-        JButton pDice2 = new JButton();// create first dice
+        JButton pDice2 = new JButton();// create 2nd dice
         pDice2.setBounds(260,100,60,60);
         pDice2.setBackground(Color.white);
         pDice2.setEnabled(false);// make unclickable
 
-        JButton pcDice1 = new JButton();// create first dice
+        JButton pcDice1 = new JButton();// create 1stPC dice
         pcDice1.setBounds(60,200,60,60);
         pcDice1.setBackground(Color.white);
         pcDice1.setEnabled(false);// make un clickable
 
-        JButton pcDice2 = new JButton();// create first dice
+        JButton pcDice2 = new JButton();// create 2ndPC dice
         pcDice2.setBounds(260,200,60,60);
         pcDice2.setBackground(Color.white);
         pcDice2.setEnabled(false);// make unclickable
 
         // add dice to screen
-        dicePanel.add(pDice1);
-        dicePanel.add(pDice2);
-        dicePanel.add(pcDice1);
-        dicePanel.add(pcDice2);
+        dicePanel.add(pDice1,1);
+        dicePanel.add(pDice2,1);
+        dicePanel.add(pcDice1,1);
+        dicePanel.add(pcDice2,1);
 
-/*
-        // wager system
-        JSlider wagerSlider = new JSlider(JSlider.HORIZONTAL, 0,playerMoney[] , 25);
-        wagerSlider.setLocation(50,30);
-        wagerSlider.setMinorTickSpacing(2);
-        wagerSlider.setMajorTickSpacing(10);
-        wagerSlider.setPaintTicks(true);
-        wagerSlider.setPaintLabels(true);
 
-        dicePanel.add(wagerSlider);
- */
-        //dicetitles
+        //dice titles
         JLabel pDiceTitle = new JLabel("Your Dice:");// Your dice JLabel
         pDiceTitle.setFont(new Font("Arial", Font.BOLD, 25));
         pDiceTitle.setForeground(Color.white);// set text color white
@@ -489,13 +500,81 @@ public class Functions {
 
         // roll button
         JButton rollDiceHouse = new JButton("Roll!");
+        rollDiceHouse.setEnabled(true);
         rollDiceHouse.setBounds(150,150,80,40);
         dicePanel.add(rollDiceHouse);
+
+        rollDiceHouse.addActionListener(new ActionListener(){// press roll button
+
+            public void actionPerformed(ActionEvent e){// dice text
+                double reward =0;
+            rollDiceHouse.setEnabled(false);
+                int p1DiceValue = rand.nextInt(1,7);
+                int p2DiceValue = rand.nextInt(1,7);
+                int pc1DiceValue = rand.nextInt(1,7);
+                int pc2DiceValue = rand.nextInt(1,7);
+
+                // dice value when roll button pressed
+                JLabel p1Dice = new JLabel(String.valueOf(p1DiceValue));
+                p1Dice.setBounds(70,110,20,20);
+                p1Dice.setForeground(Color.black);
+                p1Dice.setFont(new Font("Arial", Font.BOLD, 25)); // Set font size to 25
+                JLabel p2Dice = new JLabel(String.valueOf(p2DiceValue));
+                p2Dice.setBounds(270,110,20,20);
+                p2Dice.setForeground(Color.black);
+                p2Dice.setFont(new Font("Arial", Font.BOLD, 25)); // Set font size to 25
+                JLabel pc1Dice = new JLabel(String.valueOf(pc1DiceValue));
+                pc1Dice.setBounds(70,210,20,20);
+                pc1Dice.setForeground(Color.black);
+                pc1Dice.setFont(new Font("Arial", Font.BOLD, 25)); // Set font size to 25
+                JLabel pc2Dice = new JLabel(String.valueOf(pc2DiceValue));
+                pc2Dice.setBounds(270,210,20,20);
+                pc2Dice.setForeground(Color.black);
+                pc2Dice.setFont(new Font("Arial", Font.BOLD, 25)); // Set font size to 25
+
+                dicePanel.add(p1Dice,0);
+                dicePanel.add(p2Dice,0);
+                dicePanel.add(pc1Dice,0);
+                dicePanel.add(pc2Dice,0);
+                dicePanel.repaint();
+
+                    // Dice game outcome
+                if((pc1DiceValue+pc2DiceValue) > (p1DiceValue+p2DiceValue)){// you lose
+                    JLabel diceOutcome = new JLabel("You Lose");
+                    diceOutcome.setBounds(140,280,200,100);
+                    diceOutcome.setForeground(Color.red);
+                    diceOutcome.setFont(new Font("Arial", Font.BOLD, 25)); // Set font size to 25
+                    dicePanel.add(diceOutcome);
+                    wager*=-1;// subtract wager if lose
+                } else if ((pc1DiceValue+pc2DiceValue) < (p1DiceValue+p2DiceValue)) {// you win
+                    JLabel diceOutcome = new JLabel("You Win");
+                    diceOutcome.setBounds(140,280,150,100);
+                    diceOutcome.setForeground(Color.decode("#f0d07f"));
+                    diceOutcome.setFont(new Font("Arial", Font.BOLD, 25)); // Set font size to 25
+                    dicePanel.add(diceOutcome);
+                    wager*=2.0;// double wager if win
+                }else{// draw
+                    reward = 0;
+                    JLabel diceOutcome = new JLabel("Draw");
+                    diceOutcome.setBounds(160,280,100,100);
+                    diceOutcome.setForeground(Color.decode("#3d97ad"));
+                    diceOutcome.setFont(new Font("Arial", Font.BOLD, 25)); // Set font size to 25
+                    dicePanel.add(diceOutcome);
+                }
+
+
+
+
+            }
+        });
+
+
+
 
         diceFrame.add(dicePanel);// add the panel into the frame
         diceFrame.setResizable(false);// Prevent User from changing the window size
         diceFrame.setVisible(true);
-
+        return wager;
     }// end of dice game function
 
     public static int rollDice() {                                  //Roll Dice
