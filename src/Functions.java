@@ -370,9 +370,7 @@ public class Functions {
 
         //playerMoney[currentPlayerIndex] += tileValues[playerPositions[currentPlayerIndex]];
 
-            if(playerPositions[currentPlayerIndex] == tileValues[13] ){// add tile position
-                playerMoney[currentPlayerIndex] += diceMiniGame(currentPlayerIndex);
-            }
+
 
 
         }
@@ -582,6 +580,33 @@ public class Functions {
         return rand.nextInt(1,7);
     }
 
+
+    public static void trivia(){
+        JFrame trivFrame = new JFrame("LPCI trivia Card");
+        JPanel trivPanel = new JPanel();
+        trivPanel.setSize(300,600);
+
+        int draw = rand.nextInt(0,6);// pick 1-5 trivia cards
+
+        if(draw == 1){
+        JLabel question1 = new JLabel("When was LPCI founded?");
+        int q1Answer = 1936;
+        } else if (draw == 2) {
+            JLabel question2 = new JLabel("True or False: Was the 2023 LP football team eliminated First?");
+            String q2Answer = "True";
+        } else if (draw == 3) {
+            JLabel question3 = new JLabel("How many portables does LP have?");
+            int q3Answer = 4;
+        } else if (draw == 4) {
+            JLabel question4 = new JLabel("What animal is the LP mascot?");
+            String q4Answer = "Panther";
+        }else{
+            JLabel question5 = new JLabel("Who is the better Comp Sci Teacher?");
+            String q5Answer = "Mrs.Ivanova";
+        }
+
+        trivFrame.add(trivPanel);
+    }
 
     private static void updatePlayerPosition(int playerIndex, int diceRoll) {
         int currentPlayerPosition = playerPositions[playerIndex];
