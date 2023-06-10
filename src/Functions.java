@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 import java.awt.event.MouseAdapter;
@@ -582,30 +583,64 @@ public class Functions {
 
 
     public static void trivia(){
-        JFrame trivFrame = new JFrame("LPCI trivia Card");
-        JPanel trivPanel = new JPanel();
-        trivPanel.setSize(300,600);
+        //JFrame trivFrame = new JFrame("LPCI trivia Card");
+       // JPanel trivPanel = new JPanel();
+        //trivPanel.setSize(300,600);
 
         int draw = rand.nextInt(0,6);// pick 1-5 trivia cards
 
         if(draw == 1){
-        JLabel question1 = new JLabel("When was LPCI founded?");
+        //JLabel question1 = new JLabel("When was LPCI founded?");
         int q1Answer = 1936;
+            String input = JOptionPane.showInputDialog("When was LPCI founded? ");
+            int userAnswer = Integer.parseInt(input.toLowerCase());
+            if(userAnswer == q1Answer){
+                System.out.print("\nYou Win");
+            }else{
+                System.out.print("You Lose");
+            }
+
         } else if (draw == 2) {
-            JLabel question2 = new JLabel("True or False: Was the 2023 LP football team eliminated First?");
-            String q2Answer = "True";
+            String input = JOptionPane.showInputDialog("True or False: Was the 2023 LP football team eliminated First?");
+            String q2Answer = "true";
+
+            if(Objects.equals(input.toLowerCase(), q2Answer)){
+                System.out.print("\nYou Win");
+            }else{
+                System.out.print("You Lose");
+            }
+
         } else if (draw == 3) {
-            JLabel question3 = new JLabel("How many portables does LP have?");
+            String input = JOptionPane.showInputDialog("How many Portables does LP have? ");
+            int userAnswer = Integer.parseInt(input.toLowerCase());
             int q3Answer = 4;
+            if(userAnswer == q3Answer){
+                System.out.print("\nYou Win");
+            }else{
+                System.out.print("You Lose");
+            }
+
         } else if (draw == 4) {
-            JLabel question4 = new JLabel("What animal is the LP mascot?");
-            String q4Answer = "Panther";
+            String input = JOptionPane.showInputDialog("What animal is the LP mascot?");
+            String q4Answer = "panther";
+            if(Objects.equals(input.toLowerCase(), q4Answer)){
+                System.out.print("\nYou Win");
+            }else{
+                System.out.print("You Lose");
+            }
         }else{
-            JLabel question5 = new JLabel("Who is the better Comp Sci Teacher?");
-            String q5Answer = "Mrs.Ivanova";
+            String input = JOptionPane.showInputDialog("Who is the better Comp Sci Teacher?");
+            String q5Answer = "mrs.ivanova";// case sensitive
+
+            if(Objects.equals(input.toLowerCase(), q5Answer)){
+                System.out.print("\nYou Win");
+            }else{
+                System.out.print("You Lose");
+            }
+
         }
 
-        trivFrame.add(trivPanel);
+        //trivFrame.add(trivPanel);
     }
 
     private static void updatePlayerPosition(int playerIndex, int diceRoll) {
