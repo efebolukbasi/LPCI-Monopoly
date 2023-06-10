@@ -6,6 +6,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
 public class Functions {
 
@@ -15,16 +17,14 @@ public class Functions {
     private static final int BOARD_SIZE = 1080; // Board size in pixels
     private static final int OUTER_MARGIN = BOARD_SIZE / 20; // Outer margin size in pixels
     private static final int INNER_MARGIN = BOARD_SIZE / 40; // Inner margin size in pixels
-    private static final String DICE_HOUSE_BACKGROUND_COLOR = "#361521"; // Hex value for dice house mini game
+    private static final String DICE_HOUSE_BACKGROUND_COLOR = "#361521"; // Hex value for dice house mini-game
     private static final String START_BACKGROUND_COLOR = "#4BD183"; // Hex value for start menu color
     private static final String BACKGROUND_COLOR = "#AD66D9"; // Final value to hold the hex value of color for background
     private static final Color[] TILE_COLORS = {Color.CYAN, Color.PINK}; // Tile colors (blue and gold)
     private static final int STARTING_MONEY = 600;
     private static final int[] tileValues = new int[TILE_COUNT];
-    private static Font playerNameFont = new Font("SansSerif", Font.BOLD, 16);
-    private static Font tileFont = new Font("SansSerif", Font.BOLD, 13);
-    private static Font diceFont = new Font("Arial", Font.BOLD, 25);
-
+    private static final Font playerNameFont = new Font("SansSerif", Font.BOLD, 16);
+    private static final Font tileFont = new Font("SansSerif", Font.BOLD, 13);
 
     private static int[] playerPositions;
     private static String[] playerNames;
@@ -40,8 +40,8 @@ public class Functions {
     public static boolean allFinished = true;
     static ArrayList<String> finishOrder = new ArrayList<>();
     static Map<String, Integer> finishedPlayers = new HashMap<>();
-    public static int wager;
     private static int[] playerMoney;
+    private static int attemptCount = 0;
 
     // intro menu
     public static void IntroMenu(){// intro menu screen
@@ -217,6 +217,9 @@ public class Functions {
         Random rn = new Random();
         // TILE VALUES
         for (int i = 0; i < TILE_COUNT; i++) {
+            if (i == 4 || i == 12 || i == 20 || i == 28) {
+                continue;  // Skip to the next iteration if 'i' is 4, 12, 20, or 28 (We don't want to add or decrease money on special tiles)
+            }
             tileValues[i] = rn.nextInt(-100, 101); // Random values between -100 and 100
         }
         // Create the main frame
@@ -235,17 +238,43 @@ public class Functions {
         // Create a JLabel to display the image
         ImageIcon imageIcon = new ImageIcon("src/Images/PantherLogo.png"); // Logo Picture
         JLabel imageLabel = new JLabel(imageIcon);// assign ImageIcon to a JLabel, to be able to paste to screen.
-
         imageLabel.setSize(600, 645);
         imageLabel.setLocation(BOARD_SIZE / 5, BOARD_SIZE / 5);
         tilePanel.add(imageLabel);
 
-        ImageIcon chestIcon = new ImageIcon(("src/Images/ChestCard.png"));
-        JLabel chestLabel = new JLabel(chestIcon); // Making image a J label
-        chestLabel.setSize(350, 450);
-        chestLabel.setLocation(350, 57);
+        // Load and scale the original images
+        int width = 60;  // width of the tile
+        int height = 60; // height of the tile
 
-        tilePanel.add(chestLabel);
+        ImageIcon diceIconOriginal = new ImageIcon("src/Images/dice.png");
+        Image diceImage = diceIconOriginal.getImage();
+        Image newDiceImage = diceImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+        ImageIcon diceIcon = new ImageIcon(newDiceImage);
+
+        ImageIcon questMarkIconOriginal = new ImageIcon("src/Images/questMark.png");
+        Image questMarkImage = questMarkIconOriginal.getImage();
+        Image newQuestMarkImage = questMarkImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+        ImageIcon questMarkIcon = new ImageIcon(newQuestMarkImage);
+
+        // Create the labels with the scaled images
+        JLabel diceLabel1 = new JLabel(diceIcon);
+        JLabel diceLabel2 = new JLabel(diceIcon);
+        JLabel questMarkLabel1 = new JLabel(questMarkIcon);
+        JLabel questMarkLabel2 = new JLabel(questMarkIcon);
+
+        // Place the labels at the desired positions
+        diceLabel1.setBounds(510, 75, width, height);
+        diceLabel2.setBounds(510, 960, width, height);
+        questMarkLabel1.setBounds(955, 515, width, height);
+        questMarkLabel2.setBounds(70, 515, width, height);
+
+        // Add the labels to the panel
+        tilePanel.add(diceLabel1);
+        tilePanel.add(diceLabel2);
+        tilePanel.add(questMarkLabel1);
+        tilePanel.add(questMarkLabel2);
+
+        tilePanel.setLayout(null);
 
         // Create the tiles
         JButton[] tiles = new JButton[TILE_COUNT];
@@ -447,6 +476,94 @@ public class Functions {
     // end of board game function
 
 
+    // MINI GAMES ----------------------------------------------------------------
+
+
+    public static void triviaCards(int playerTurn) {
+        // Question bank
+        Map<String, String> questionBank = new HashMap<>();
+        questionBank.put("When was LPCI founded?", "1936");
+        questionBank.put("True or False: Was the 2023 LP football team eliminated First?", "true");
+        questionBank.put("How many portables does LP have?", "4");
+        questionBank.put("What animal is the LP mascot?", "panther");
+        questionBank.put("Who is the better Comp Sci Teacher?", "mrs.ivanova");
+
+
+        // Get a random question and its correct answer
+        java.util.List<String> keys = new java.util.ArrayList<>(questionBank.keySet());
+        String question = keys.get(new Random().nextInt(keys.size()));
+        String correctAnswer = questionBank.get(question);
+
+        // Reset attempt count for the new question
+        attemptCount = 0;
+
+        // Creating the JFrame for the trivia question
+        JFrame triviaFrame = new JFrame("Trivia Time!");
+        JPanel triviaPanel = new JPanel();
+        triviaFrame.setSize(400, 200);
+        triviaPanel.setLayout(new BoxLayout(triviaPanel, BoxLayout.Y_AXIS));
+        triviaPanel.setBackground(Color.decode("#361521"));
+
+        // Player labels
+        JLabel playerLabel1 = new JLabel("Player " + (playerTurn+1));
+        playerLabel1.setFont(new Font("Arial", Font.BOLD, 16));
+        playerLabel1.setForeground(Color.WHITE);
+        playerLabel1.setBounds(0, 90, 100, 20);
+        playerLabel1.setAlignmentX(Component.CENTER_ALIGNMENT);
+        triviaPanel.add(playerLabel1);
+
+        // Question label
+        JLabel questionLabel = new JLabel(question);
+        questionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        questionLabel.setForeground(Color.WHITE);
+        triviaPanel.add(questionLabel);
+
+        // Panel and text field for the answer
+        JPanel answerPanel = new JPanel();
+        answerPanel.setLayout(new BoxLayout(answerPanel, BoxLayout.X_AXIS));
+        JTextField answerField = new JTextField();
+        answerField.setMaximumSize(new Dimension(Integer.MAX_VALUE, answerField.getPreferredSize().height));
+        answerPanel.add(Box.createHorizontalGlue());
+        answerPanel.add(answerField);
+        answerPanel.add(Box.createHorizontalGlue());
+        triviaPanel.add(answerPanel);
+
+        // Button for submitting the answer
+        JButton submitButton = new JButton("Submit Answer");
+        submitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        triviaPanel.add(submitButton);
+
+        // Action listener for the submit button
+        submitButton.addActionListener(e -> {
+            String playerAnswer = answerField.getText().trim(); // Added trim() here
+            attemptCount++;
+
+            if (playerAnswer.equalsIgnoreCase(correctAnswer)) {
+                // Correct answer: give $150
+                playerMoney[playerTurn] += 150;
+                JOptionPane.showMessageDialog(null, "Correct answer! You earned $150. Your new balance is $" + playerMoney[playerTurn] + ".");
+                playerLabels[playerTurn].setText(playerNames[playerTurn] + ": $" + playerMoney[playerTurn]);
+                triviaFrame.dispose();
+                return;
+            } else if (attemptCount < 2) {
+                // Incorrect answer, but they still have another chance
+                JOptionPane.showMessageDialog(null, "Incorrect answer. Try again.");
+                answerField.setText("");
+            } else {
+                // Second attempt failed, deduct $50
+                playerMoney[playerTurn] -= 50;
+                JOptionPane.showMessageDialog(null, "Sorry, the correct answer was: " + correctAnswer + ". You lost $50. Your new balance is $" + playerMoney[playerTurn] + ".");
+                playerLabels[playerTurn].setText(playerNames[playerTurn] + ": $" + playerMoney[playerTurn]);
+                triviaFrame.dispose();
+                return;
+            }
+        });
+
+        // Add panel to frame and show the frame
+        triviaFrame.add(triviaPanel);
+        triviaFrame.setResizable(false);
+        triviaFrame.setVisible(true);
+    }
 
     public static void showDiceHouse(int playerTurn) {
         Random rand = new Random();
@@ -466,17 +583,24 @@ public class Functions {
         titleLabel.setBounds(110, 20, 250, 30);
         dicePanel.add(titleLabel);
 
+        // Player's money
+        JLabel playerMoneyLabel = new JLabel("Your Money: $" + playerMoney[playerTurn]);
+        playerMoneyLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        playerMoneyLabel.setForeground(Color.GREEN);
+        playerMoneyLabel.setBounds(30, 60, 200, 20);
+        dicePanel.add(playerMoneyLabel);
+
         // Player labels
         JLabel playerLabel1 = new JLabel("Player " + (playerTurn+1) + " dice:");
         playerLabel1.setFont(new Font("Arial", Font.BOLD, 16));
         playerLabel1.setForeground(Color.WHITE);
-        playerLabel1.setBounds(30, 80, 150, 20);
+        playerLabel1.setBounds(30, 90, 150, 20);
         dicePanel.add(playerLabel1);
 
         JLabel playerLabel2 = new JLabel("CPU dice:");
         playerLabel2.setFont(new Font("Arial", Font.BOLD, 16));
         playerLabel2.setForeground(Color.WHITE);
-        playerLabel2.setBounds(280, 80, 150, 20);
+        playerLabel2.setBounds(280, 90, 150, 20);
         dicePanel.add(playerLabel2);
 
         // Dice buttons
@@ -484,24 +608,28 @@ public class Functions {
         playerDiceButton1.setBounds(30, 110, 80, 80);
         playerDiceButton1.setBackground(Color.WHITE);
         playerDiceButton1.setEnabled(false);
+        playerDiceButton1.setFont(new Font("Courier", Font.BOLD, 20));
         dicePanel.add(playerDiceButton1);
 
         JButton playerDiceButton2 = new JButton();
         playerDiceButton2.setBounds(30, 210, 80, 80);
         playerDiceButton2.setBackground(Color.WHITE);
         playerDiceButton2.setEnabled(false);
+        playerDiceButton2.setFont(new Font("Courier", Font.BOLD, 20));
         dicePanel.add(playerDiceButton2);
 
         JButton playerDiceButton3 = new JButton();
         playerDiceButton3.setBounds(280, 110, 80, 80);
         playerDiceButton3.setBackground(Color.WHITE);
         playerDiceButton3.setEnabled(false);
+        playerDiceButton3.setFont(new Font("Courier", Font.BOLD, 20));
         dicePanel.add(playerDiceButton3);
 
         JButton playerDiceButton4 = new JButton();
         playerDiceButton4.setBounds(280, 210, 80, 80);
         playerDiceButton4.setBackground(Color.WHITE);
         playerDiceButton4.setEnabled(false);
+        playerDiceButton4.setFont(new Font("Courier", Font.BOLD, 20));
         dicePanel.add(playerDiceButton4);
 
         // Roll button
@@ -509,9 +637,17 @@ public class Functions {
         rollButton.setBounds(140, 160, 120, 40);
         dicePanel.add(rollButton);
 
+        // Wager label
+        JLabel wagerLabel = new JLabel("Wager: $" + 0);
+        wagerLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        wagerLabel.setForeground(Color.YELLOW);
+        wagerLabel.setBounds(160, 280, 200, 20);
+        dicePanel.add(wagerLabel);
+
         // Wager slider
         JSlider wagerSlider = new JSlider(JSlider.HORIZONTAL, 0, playerMoney[playerTurn], 0);
         wagerSlider.setBounds(40, 310, 320, 40);
+        wagerSlider.addChangeListener(e -> wagerLabel.setText("Wager: $" + wagerSlider.getValue())); // update wager label when slider changes
         dicePanel.add(wagerSlider);
 
         // Roll button action listener
@@ -535,20 +671,23 @@ public class Functions {
             // Check win/lose conditions and update player's money
             if (diceValue1 + diceValue2 < diceValue3 + diceValue4) {
                 playerMoney[playerTurn] -= wager;
-                JOptionPane.showMessageDialog(diceFrame, "You lose " + wager + " money.");
+                JOptionPane.showMessageDialog(diceFrame, "You lose $" + wager);
             } else if (diceValue1 + diceValue2 > diceValue3 + diceValue4) {
                 playerMoney[playerTurn] += (2 * wager);
-                JOptionPane.showMessageDialog(diceFrame, "You win " + (2 * wager) + " money.");
+                JOptionPane.showMessageDialog(diceFrame, "You win $" + (2 * wager));
             } else {
                 JOptionPane.showMessageDialog(diceFrame, "It's a draw. No money is gained or lost.");
             }
 
             // Update player's money display
             playerLabels[playerTurn].setText(playerNames[playerTurn] + ": $" + playerMoney[playerTurn]);
+            playerMoneyLabel.setText("Your Money: $" + playerMoney[playerTurn]);
+            diceFrame.dispose(); // close after wagered once
         });
 
         diceFrame.add(dicePanel);
         diceFrame.setVisible(true);
+        diceFrame.setResizable(false);
     }// end of dice game function
 
     //Roll Dice
@@ -569,8 +708,14 @@ public class Functions {
         }
         playerPositions[playerIndex] = newPlayerPosition;
 
-        if (newPlayerPosition == 4 || newPlayerPosition == 12 || newPlayerPosition == 20  || newPlayerPosition == 28){
+        if ( newPlayerPosition == 4 || newPlayerPosition == 20 ){
             showDiceHouse(playerIndex);
+            playerLabels[playerIndex].setText(playerNames[playerIndex] + ": $" + playerMoney[playerIndex]); // Update player's money display
+        }
+
+        if ( newPlayerPosition == 12 ||newPlayerPosition == 28 ){
+            playerPositions[playerIndex] = newPlayerPosition;
+            triviaCards(playerIndex);
             playerLabels[playerIndex].setText(playerNames[playerIndex] + ": $" + playerMoney[playerIndex]); // Update player's money display
         }
 
@@ -593,6 +738,7 @@ public class Functions {
             newRow = 32 - newPlayerPosition;
             newCol = 0;
         }
+
 
         // Calculate the new location of the player's image label
         int x = OUTER_MARGIN + INNER_MARGIN + (tileSize - 25 - playerImageLabels[playerIndex].getWidth()) / 2 + newCol * (tileSize + INNER_MARGIN);
