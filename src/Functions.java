@@ -22,10 +22,11 @@ public class Functions {
     private static final String BACKGROUND_COLOR = "#AD66D9"; // Final value to hold the hex value of color for background
     private static final Color[] TILE_COLORS = {Color.CYAN, Color.PINK}; // Tile colors (blue and gold)
     private static final int STARTING_MONEY = 600;
-    private static final int[] tileValues = new int[TILE_COUNT];
-    private static final Font playerNameFont = new Font("SansSerif", Font.BOLD, 16);
-    private static final Font tileFont = new Font("SansSerif", Font.BOLD, 13);
 
+
+    private static int[] tileValues = new int[TILE_COUNT];
+    private static Font playerNameFont = new Font("SansSerif", Font.BOLD, 16);
+    private static Font tileFont = new Font("SansSerif", Font.BOLD, 13);
     private static int[] playerPositions;
     private static String[] playerNames;
     private static JLabel[] playerLabels;
@@ -44,6 +45,34 @@ public class Functions {
     private static int attemptCount = 0;
 
     // intro menu
+
+    /**
+     * This function is used to generate the introduction menu for LPCI Monopoly game. It creates the
+     * initial interface with options to start the game, exit, or view credits.
+     *
+     * It initially creates a JFrame, and a JPanel, with designated color, size, and layout.
+     *
+     * It then adds four buttons to the panel: "Start", "Exit", "Credits", and "Back". Each button is assigned
+     * specific bounds and added to the startPanel.
+     *
+     * The "Start" button initiates the game, removing all components from the startPanel and asking for the number of players
+     * and their names through JOptionPane dialogs. The gameBoard method is called after all inputs are received.
+     *
+     * The "Exit" button disposes the startFrame, effectively closing the game.
+     *
+     * The "Credits" button switches the panel to display the game credits. The credits information is added as JLabels.
+     *
+     * The "Back" button from credits disposes the current window and recalls the IntroMenu to return to the initial screen.
+     *
+     * An ImageIcon is added to the panel for aesthetic purpose.
+     *
+     * Lastly, the panel is added to the frame, and various settings are set for the frame, such as resizable and visibility.
+     *
+     * @function IntroMenu()
+     * @public
+     * @static
+     * @return void
+     */
     public static void IntroMenu(){// intro menu screen
 
 
@@ -150,7 +179,7 @@ public class Functions {
             startPanel.add(backButton);// back to menu button
             backButton.addActionListener(e1 -> {
                 startFrame.dispose();// removes window
-                IntroMenu();
+                IntroMenu(); // recalls the intro menu
             });
         });// ends here
 
@@ -165,12 +194,31 @@ public class Functions {
         startPanel.add(creditsButton);
         startPanel.add(exitButton);
         startPanel.add(startImageLabel);
+
         //frame settings
         startFrame.setResizable(false);// Prevent User from changing the window size
         startFrame.setVisible(true);
 
 
     }
+
+    /**
+     * This method creates and displays a 'Game Over' popup once the game has ended.
+     *
+     * Key functionalities:
+     * - It creates a JPanel and sets its layout to vertical BoxLayout.
+     * - A 'Game Over' label is created and added to the panel.
+     * - The finishedPlayers map, assumed to hold player names and their corresponding money, is sorted in descending order.
+     * - For each entry in the sorted map, a label is created displaying the player's rank, name, and final money amount.
+     * - A 'Close Game' button is added, which will terminate the program when clicked.
+     * - Finally, the entire panel, complete with the 'Game Over' label, sorted player labels, and 'Close Game' button,
+     *   is shown in a JOptionPane with a title of 'Game Over'.
+     *
+     * @function showGameOverPopup()
+     * @public
+     * @static
+     * @return void
+     */
 
     // Game over popup
     public static void showGameOverPopup() {
@@ -212,9 +260,29 @@ public class Functions {
 
     // main game
 
+    /**
+     * This method is used to initialize and display the game board for a Monopoly-like game.
+     * It configures the game board, player information, dice roll functionality, and GUI elements
+     * such as buttons, images, and labels.
+     *
+     * Key functionalities:
+     * - Generates random values for each tile on the board.
+     * - Creates the main game window (JFrame) and the game board (JPanel).
+     * - Loads and displays the necessary images for the game.
+     * - Generates and places game tiles represented by JButtons on the game board.
+     * - Initializes and displays player details, including player logos, positions, money, and roll buttons.
+     * - Handles the dice roll functionality, updating player position, tile value, and other game statistics after each turn.
+     * - Displays the current player's turn and a legend indicating each players
+     *
+     * @function gameBoard()
+     * @public
+     * @static
+     * @return void
+     */
 
     public static void gameBoard(){
         Random rn = new Random();
+
         // TILE VALUES
         for (int i = 0; i < TILE_COUNT; i++) {
             if (i == 4 || i == 12 || i == 20 || i == 28) {
@@ -222,6 +290,7 @@ public class Functions {
             }
             tileValues[i] = rn.nextInt(-100, 101); // Random values between -100 and 100
         }
+
         // Create the main frame
         JFrame frame = new JFrame("Monopoly Board");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -234,6 +303,7 @@ public class Functions {
         frame.add(tilePanel);
 
         // Images //
+
         // logo in screen
         // Create a JLabel to display the image
         ImageIcon imageIcon = new ImageIcon("src/Images/PantherLogo.png"); // Logo Picture
@@ -478,10 +548,29 @@ public class Functions {
 
     // MINI GAMES ----------------------------------------------------------------
 
+    /**
+     * This function creates a trivia game interface for the given player's turn.
+     * The player can answer trivia questions and win or lose in-game money based on their answers.
+     * The game is played in a JFrame with a customized JPanel.
+     *
+     * The function displays a random question and offers a text field for the player to input their answer.
+     * The player has two attempts to answer the question correctly.
+     * If the player answers correctly on the first or second try, they gain $150.
+     * If the player fails to answer correctly after two attempts, they lose $50.
+     *
+     * After the trivia round is resolved, the player's money display is updated, and the trivia frame is disposed.
+     *
+     * @function triviaCards()
+     * @public
+     * @static
+     * @param playerTurn the current player's turn (0-indexed)
+     * @return void
+     */
 
     public static void triviaCards(int playerTurn) {
         // Question bank
         Map<String, String> questionBank = new HashMap<>();
+        //Question bank (question, answer)
         questionBank.put("When was LPCI founded?", "1936");
         questionBank.put("True or False: Was the 2023 LP football team eliminated First?", "true");
         questionBank.put("How many portables does LP have?", "4");
@@ -544,7 +633,6 @@ public class Functions {
                 JOptionPane.showMessageDialog(null, "Correct answer! You earned $150. Your new balance is $" + playerMoney[playerTurn] + ".");
                 playerLabels[playerTurn].setText(playerNames[playerTurn] + ": $" + playerMoney[playerTurn]);
                 triviaFrame.dispose();
-                return;
             } else if (attemptCount < 2) {
                 // Incorrect answer, but they still have another chance
                 JOptionPane.showMessageDialog(null, "Incorrect answer. Try again.");
@@ -555,7 +643,6 @@ public class Functions {
                 JOptionPane.showMessageDialog(null, "Sorry, the correct answer was: " + correctAnswer + ". You lost $50. Your new balance is $" + playerMoney[playerTurn] + ".");
                 playerLabels[playerTurn].setText(playerNames[playerTurn] + ": $" + playerMoney[playerTurn]);
                 triviaFrame.dispose();
-                return;
             }
         });
 
@@ -565,12 +652,31 @@ public class Functions {
         triviaFrame.setVisible(true);
     }
 
+    /**
+     * This function creates a dice house game interface for the given player turn. The player can wager their in-game money
+     * and roll the dice against a CPU to win or lose money. The game is played in a JFrame with a customized JPanel.
+     *
+     * The function displays the player's current money, and two dice rolls for both the player and the CPU. The game
+     * also includes a "Roll!" button for rolling the dice, a slider for placing a wager, and a label that shows
+     * the current wager.
+     *
+     * The player's roll is compared against the CPU's roll, and the player either gains money (double their wager), loses
+     * money (their wager), or draws (no money change) based on the result.
+     *
+     * After the wager is resolved, the player's money display is updated, and the dice house frame is disposed.
+     *
+     * @function showDiceHouse()
+     * @public
+     * @static
+     * @param playerTurn the current player's turn (0-indexed)
+     * @return void
+     */
+
     public static void showDiceHouse(int playerTurn) {
-        Random rand = new Random();
 
         JFrame diceFrame = new JFrame("Mr.Reid's Dice House");
         JPanel dicePanel = new JPanel();
-        dicePanel.setBackground(Color.decode("#361521"));
+        dicePanel.setBackground(Color.decode(DICE_HOUSE_BACKGROUND_COLOR));
         diceFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         diceFrame.setSize(400, 400);
         dicePanel.setSize(400, 400);
@@ -696,8 +802,23 @@ public class Functions {
         return rand.nextInt(1,7);
     }
 
+    /**
+     * This method is used to update a player's position on the game board based on a dice roll.
+     *
+     * Key functionalities:
+     * - It calculates the new position of the player by adding the dice roll to the current position 
+     *   and taking modulo of the total number of tiles (TILE_COUNT).
+     * - If the new position is less than the current position (which can happen because of the modulo operation), 
+     *   the player's position is set to 0 and the player is marked as having finished.
+     * - If the new position is 4 or 20, it invokes the showDiceHouse method and updates the player's displayed money.
+     * - If the new position is 12 or 28, it invokes the triviaCards method and updates the player's displayed money.
+     * - It calculates the new row and column for the player based on the new position and updates the player's image label location accordingly.
+     *
+     * @param playerIndex The index of the player whose position is to be updated.
+     * @param diceRoll    The number rolled on the dice.
+     */
 
-    private static void updatePlayerPosition(int playerIndex, int diceRoll) {
+    public static void updatePlayerPosition(int playerIndex, int diceRoll) {
         int currentPlayerPosition = playerPositions[playerIndex];
         int newPlayerPosition = (currentPlayerPosition + diceRoll) % TILE_COUNT;
 
